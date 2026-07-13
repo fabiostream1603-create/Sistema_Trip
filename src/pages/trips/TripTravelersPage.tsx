@@ -61,10 +61,10 @@ export function TripTravelersPage() {
 
     if (editingTraveler) {
       await updateTravelerMutation.mutateAsync({ ...payload, id: editingTraveler.id })
-      toast.success('Traveler updated.')
+      toast.success('Viajante atualizado.')
     } else {
       await createTravelerMutation.mutateAsync(payload)
-      toast.success('Traveler added.')
+      toast.success('Viajante adicionado.')
     }
 
     setEditingTraveler(null)
@@ -82,11 +82,11 @@ export function TripTravelersPage() {
     if (editingTraveler?.id === travelerId) {
       setEditingTraveler(null)
     }
-    toast.success('Traveler removed.')
+    toast.success('Viajante removido.')
   }
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before using travelers." />
+    return <StateCard title="Conexao com Supabase obrigatoria" body="Configure as variaveis do ambiente e rode as migrations antes de usar os viajantes." />
   }
 
   if (travelersQuery.isLoading) {
@@ -96,11 +96,11 @@ export function TripTravelersPage() {
   if (travelersQuery.isError || !travelersQuery.data) {
     return (
       <StateCard
-        title="Unable to load travelers"
+        title="Nao foi possivel carregar os viajantes"
         body={
           travelersQuery.error instanceof Error
             ? travelersQuery.error.message
-            : 'Traveler data could not be loaded.'
+            : 'Os dados de viajantes nao puderam ser carregados.'
         }
       />
     )
@@ -111,16 +111,16 @@ export function TripTravelersPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(145deg,rgba(16,98,90,0.96),rgba(17,46,74,0.95),rgba(231,136,99,0.8))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Travelers</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Viajantes</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Manage real traveler identities for expenses, checklists, and shared planning
+          Gerencie os viajantes reais usados em gastos, checklists e planejamento compartilhado
         </h1>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <MetricCard label="Traveler profiles" value={String(travelers.length)} />
-        <MetricCard label="Accepted members" value={String(members.filter((member) => member.invitation_status === 'accepted').length)} />
-        <MetricCard label="Linked accounts" value={String(travelers.filter((traveler) => traveler.linked_user_id).length)} />
+        <MetricCard label="Perfis de viajantes" value={String(travelers.length)} />
+        <MetricCard label="Membros aceitos" value={String(members.filter((member) => member.invitation_status === 'accepted').length)} />
+        <MetricCard label="Contas vinculadas" value={String(travelers.filter((traveler) => traveler.linked_user_id).length)} />
       </section>
 
       <Card>
@@ -131,35 +131,35 @@ export function TripTravelersPage() {
             </div>
             <div>
               <h2 className="font-serif text-2xl">
-                {editingTraveler ? 'Edit traveler' : 'Add traveler'}
+                {editingTraveler ? 'Editar viajante' : 'Adicionar viajante'}
               </h2>
               <p className="text-sm text-muted-foreground">
-                Travelers are the identities used in budgets, checklist ownership, and documents.
+                Os viajantes sao usados nos gastos, na atribuicao de checklists e nos documentos.
               </p>
             </div>
           </div>
 
           <form className="grid gap-5 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
             <Field>
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Nome</Label>
               <Input id="name" {...form.register('name')} />
               <ErrorText message={form.formState.errors.name?.message} />
             </Field>
 
             <Field>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">E-mail</Label>
               <Input id="email" {...form.register('email')} />
               <ErrorText message={form.formState.errors.email?.message} />
             </Field>
 
             <Field>
-              <Label htmlFor="linked_user_id">Linked member</Label>
+              <Label htmlFor="linked_user_id">Membro vinculado</Label>
               <select
                 className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
                 id="linked_user_id"
                 {...form.register('linked_user_id')}
               >
-                <option value="">No linked member</option>
+                <option value="">Nenhum membro vinculado</option>
                 {members.map((member) => (
                   <option key={member.user_id} value={member.user_id}>
                     {(member.full_name ?? member.user_id.slice(0, 8))} ({member.role})
@@ -169,15 +169,15 @@ export function TripTravelersPage() {
             </Field>
 
             <Field>
-              <Label htmlFor="color_identifier">Color identifier</Label>
+              <Label htmlFor="color_identifier">Identificador de cor</Label>
               <Input id="color_identifier" {...form.register('color_identifier')} />
               <ErrorText message={form.formState.errors.color_identifier?.message} />
             </Field>
 
             <div className="md:col-span-2">
               <Field>
-                <Label htmlFor="avatar_url">Avatar URL</Label>
-                <Input id="avatar_url" placeholder="https://example.com/avatar.jpg" {...form.register('avatar_url')} />
+                <Label htmlFor="avatar_url">URL do avatar</Label>
+                <Input id="avatar_url" placeholder="https://exemplo.com/avatar.jpg" {...form.register('avatar_url')} />
                 <ErrorText message={form.formState.errors.avatar_url?.message} />
               </Field>
             </div>
@@ -189,14 +189,14 @@ export function TripTravelersPage() {
                   variant="outline"
                   onClick={() => setEditingTraveler(null)}
                 >
-                  Cancel
+                  Cancelar
                 </Button>
               ) : null}
               <Button
                 disabled={createTravelerMutation.isPending || updateTravelerMutation.isPending}
                 type="submit"
               >
-                {editingTraveler ? 'Save changes' : 'Add traveler'}
+                {editingTraveler ? 'Salvar alteracoes' : 'Adicionar viajante'}
               </Button>
             </div>
           </form>
@@ -206,9 +206,9 @@ export function TripTravelersPage() {
       <Card>
         <CardContent className="space-y-4 p-6">
           <div>
-            <h2 className="font-serif text-2xl">Traveler roster</h2>
+            <h2 className="font-serif text-2xl">Lista de viajantes</h2>
             <p className="text-sm text-muted-foreground">
-              These records back expense splits, traveler balances, and ownership labels across the app.
+              Esses registros alimentam divisao de gastos, saldos e identificacao dentro do app.
             </p>
           </div>
 
@@ -227,23 +227,23 @@ export function TripTravelersPage() {
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {traveler.email ?? 'No email linked'}
+                      {traveler.email ?? 'Sem e-mail vinculado'}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
                       {traveler.linked_user_id
-                        ? `Linked to member ${traveler.linked_user_id.slice(0, 8)}`
-                        : 'Standalone traveler identity'}
+                        ? `Vinculado ao membro ${traveler.linked_user_id.slice(0, 8)}`
+                        : 'Viajante independente'}
                     </p>
                   </div>
 
                   <div className="flex gap-2">
                     <Button type="button" variant="outline" onClick={() => setEditingTraveler(traveler)}>
                       <Pencil className="size-4" />
-                      Edit
+                      Editar
                     </Button>
                     <Button type="button" variant="outline" onClick={() => handleDelete(traveler.id)}>
                       <Trash2 className="size-4" />
-                      Delete
+                      Excluir
                     </Button>
                   </div>
                 </div>
@@ -251,7 +251,7 @@ export function TripTravelersPage() {
             </div>
           ) : (
             <div className="rounded-[1.5rem] border border-dashed px-5 py-8 text-sm text-muted-foreground">
-              No travelers yet. Add the first traveler identity to start splitting expenses and assigning trip prep.
+              Nenhum viajante cadastrado ainda. Adicione o primeiro para dividir gastos e organizar a preparacao da viagem.
             </div>
           )}
         </CardContent>
@@ -283,7 +283,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Travelers</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Viajantes</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>

@@ -30,11 +30,11 @@ export function LoginForm() {
   async function onSubmit(values: LoginValues) {
     try {
       await login.mutateAsync(values)
-      toast.success('Welcome back to Voyage Hub.')
+      toast.success('Bem-vindo de volta ao Voyage Hub.')
       navigate(redirectPath)
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Unable to sign in right now.'
+        error instanceof Error ? error.message : 'Nao foi possivel entrar agora.'
       toast.error(message)
     }
   }
@@ -51,15 +51,15 @@ export function LoginForm() {
       const data = await signUp.mutateAsync(values)
 
       if (data.session) {
-        toast.success('Account created. You are now signed in.')
+        toast.success('Conta criada com sucesso. Voce ja entrou no app.')
         navigate('/trips')
         return
       }
 
-      toast.success('Account created. Check your email to confirm access.')
+      toast.success('Conta criada. Confira seu e-mail para confirmar o acesso.')
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Unable to create your account right now.'
+        error instanceof Error ? error.message : 'Nao foi possivel criar sua conta agora.'
       toast.error(message)
     }
   }
@@ -68,44 +68,45 @@ export function LoginForm() {
     <Card className="glass-panel">
       <CardContent className="p-8">
         <div className="mb-8 space-y-2">
-          <p className="text-sm uppercase tracking-[0.3em] text-primary">Sign in</p>
-          <h1 className="font-serif text-4xl">Travel plans, all in one place</h1>
+          <p className="text-sm uppercase tracking-[0.3em] text-primary">Entrar</p>
+          <h1 className="font-serif text-4xl">Sua viagem inteira em um so lugar</h1>
           <p className="text-sm text-muted-foreground">
-            Secure access for trips, itinerary planning, documents, and budgets.
+            Acesse viagens, roteiro, documentos e gastos com seguranca.
           </p>
         </div>
 
         {!hasSupabaseEnv && (
           <div className="mb-6 flex gap-3 rounded-2xl border border-accent/30 bg-accent/10 p-4 text-sm">
-            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-accent" />
-            <p>
-              Add your Supabase URL and anon key to enable authentication. The
-              UI is ready, but sign-in will stay disabled until then.
-            </p>
-          </div>
+              <AlertTriangle className="mt-0.5 size-5 shrink-0 text-accent" />
+              <p>
+              Adicione a URL e a chave anonima do Supabase para habilitar a
+              autenticacao. A interface ja esta pronta, mas o login fica
+              desabilitado ate isso ser configurado.
+              </p>
+            </div>
         )}
 
         <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">E-mail</Label>
             <Input
               id="email"
               type="email"
               autoComplete="email"
               inputMode="email"
-              placeholder="you@example.com"
+              placeholder="voce@exemplo.com"
               {...form.register('email')}
             />
             <FieldError message={form.formState.errors.email?.message} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Senha</Label>
             <Input
               id="password"
               type="password"
               autoComplete="current-password"
-              placeholder="Enter your password"
+              placeholder="Digite sua senha"
               {...form.register('password')}
             />
             <FieldError message={form.formState.errors.password?.message} />
@@ -119,10 +120,10 @@ export function LoginForm() {
             {login.isPending ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                Signing in
+                Entrando
               </>
             ) : (
-              'Sign in securely'
+              'Entrar com seguranca'
             )}
           </Button>
 
@@ -136,10 +137,10 @@ export function LoginForm() {
             {signUp.isPending ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                Creating account
+                Criando conta
               </>
             ) : (
-              'Create account'
+              'Criar conta'
             )}
           </Button>
         </form>

@@ -65,11 +65,11 @@ export function ProfilePage() {
     })
 
     setTheme(values.theme)
-    toast.success('Profile settings saved.')
+    toast.success('Perfil salvo com sucesso.')
   }
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before editing your profile." />
+    return <StateCard title="Conexao com Supabase obrigatoria" body="Configure as variaveis do ambiente e rode as migrations antes de editar seu perfil." />
   }
 
   if (profileQuery.isLoading) {
@@ -79,11 +79,11 @@ export function ProfilePage() {
   if (profileQuery.isError || !profileQuery.data) {
     return (
       <StateCard
-        title="Unable to load your profile"
+        title="Nao foi possivel carregar seu perfil"
         body={
           profileQuery.error instanceof Error
             ? profileQuery.error.message
-            : 'Profile data could not be loaded.'
+            : 'Os dados do perfil nao puderam ser carregados.'
         }
       />
     )
@@ -92,37 +92,37 @@ export function ProfilePage() {
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(145deg,rgba(18,92,86,0.97),rgba(23,54,77,0.94),rgba(227,132,93,0.78))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Profile</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Perfil</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Personal travel preferences for theme, currency, locale, and navigation
+          Suas preferencias pessoais de tema, moeda, idioma e navegacao
         </h1>
         <p className="mt-3 text-sm text-white/80">
-          Signed in as {session?.user.email ?? 'current user'}.
+          Logado como {session?.user.email ?? 'usuario atual'}.
         </p>
       </section>
 
       <Card>
         <CardContent className="space-y-6 p-6">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-primary">Preferences</p>
-            <h2 className="mt-2 font-serif text-3xl">Your default travel setup</h2>
+            <p className="text-sm uppercase tracking-[0.3em] text-primary">Preferencias</p>
+            <h2 className="mt-2 font-serif text-3xl">Configuracao padrao de viagem</h2>
           </div>
 
           <form className="grid gap-5 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
             <Field>
-              <Label htmlFor="full_name">Display name</Label>
+              <Label htmlFor="full_name">Nome de exibicao</Label>
               <Input id="full_name" {...form.register('full_name')} />
               <ErrorText message={form.formState.errors.full_name?.message} />
             </Field>
 
             <Field>
-              <Label htmlFor="avatar_url">Avatar URL</Label>
-              <Input id="avatar_url" placeholder="https://example.com/avatar.jpg" {...form.register('avatar_url')} />
+              <Label htmlFor="avatar_url">URL do avatar</Label>
+              <Input id="avatar_url" placeholder="https://exemplo.com/avatar.jpg" {...form.register('avatar_url')} />
               <ErrorText message={form.formState.errors.avatar_url?.message} />
             </Field>
 
             <Field>
-              <Label htmlFor="preferred_currency">Preferred currency</Label>
+              <Label htmlFor="preferred_currency">Moeda preferida</Label>
               <select
                 className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
                 id="preferred_currency"
@@ -134,7 +134,7 @@ export function ProfilePage() {
             </Field>
 
             <Field>
-              <Label htmlFor="preferred_navigation_app">Navigation app</Label>
+              <Label htmlFor="preferred_navigation_app">App de navegacao</Label>
               <select
                 className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
                 id="preferred_navigation_app"
@@ -147,33 +147,33 @@ export function ProfilePage() {
             </Field>
 
             <Field>
-              <Label htmlFor="locale">Locale</Label>
+              <Label htmlFor="locale">Idioma e regiao</Label>
               <Input id="locale" {...form.register('locale')} />
               <ErrorText message={form.formState.errors.locale?.message} />
             </Field>
 
             <Field>
-              <Label htmlFor="timezone">Timezone</Label>
+              <Label htmlFor="timezone">Fuso horario</Label>
               <Input id="timezone" {...form.register('timezone')} />
               <ErrorText message={form.formState.errors.timezone?.message} />
             </Field>
 
             <Field>
-              <Label htmlFor="theme">Theme</Label>
+              <Label htmlFor="theme">Tema</Label>
               <select
                 className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
                 id="theme"
                 {...form.register('theme')}
               >
-                <option value="system">System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
+                <option value="system">Sistema</option>
+                <option value="light">Claro</option>
+                <option value="dark">Escuro</option>
               </select>
             </Field>
 
             <div className="md:col-span-2 flex justify-end">
               <Button disabled={updateProfileMutation.isPending} type="submit">
-                Save profile
+                Salvar perfil
               </Button>
             </div>
           </form>
@@ -195,7 +195,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Profile</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Perfil</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>

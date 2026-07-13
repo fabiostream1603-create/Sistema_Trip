@@ -10,10 +10,10 @@ export function NewExpensePage() {
     return (
       <Card>
         <CardContent className="space-y-3 p-8">
-          <p className="text-sm uppercase tracking-[0.3em] text-primary">New expense</p>
-          <h1 className="font-serif text-4xl">Supabase connection required</h1>
+          <p className="text-sm uppercase tracking-[0.3em] text-primary">Novo gasto</p>
+          <h1 className="font-serif text-4xl">Conexao com Supabase obrigatoria</h1>
           <p className="max-w-2xl text-muted-foreground">
-            Configure the env values and run the migrations before creating expenses.
+            Configure as variaveis do ambiente e rode as migrations antes de criar gastos.
           </p>
         </CardContent>
       </Card>

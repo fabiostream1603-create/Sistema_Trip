@@ -32,7 +32,7 @@ export function TripPlacesPage() {
       (placesQuery.data ?? []).map((place) => ({
         id: place.id,
         title: place.title,
-        subtitle: [place.city, place.country].filter(Boolean).join(', ') || place.address || 'Saved place',
+        subtitle: [place.city, place.country].filter(Boolean).join(', ') || place.address || 'Lugar salvo',
         category: place.category,
         country: place.country,
         city: place.city,
@@ -85,10 +85,10 @@ export function TripPlacesPage() {
 
     if (editingPlace) {
       await updatePlaceMutation.mutateAsync({ ...payload, id: editingPlace.id })
-      toast.success('Place updated.')
+      toast.success('Lugar atualizado.')
     } else {
       await createPlaceMutation.mutateAsync(payload)
-      toast.success('Place saved.')
+      toast.success('Lugar salvo.')
     }
 
     setEditingPlace(null)
@@ -101,11 +101,11 @@ export function TripPlacesPage() {
       setEditingPlace(null)
       setIsFormOpen(false)
     }
-    toast.success('Place removed.')
+    toast.success('Lugar removido.')
   }
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before using places." />
+    return <StateCard title="Conexao com Supabase obrigatoria" body="Configure as variaveis do ambiente e rode as migrations antes de usar os lugares." />
   }
 
   if (dashboardQuery.isLoading || placesQuery.isLoading) {
@@ -115,11 +115,11 @@ export function TripPlacesPage() {
   if (dashboardQuery.isError || !dashboardQuery.data) {
     return (
       <StateCard
-        title="Unable to load places"
+        title="Nao foi possivel carregar os lugares"
         body={
           dashboardQuery.error instanceof Error
             ? dashboardQuery.error.message
-            : 'Trip destinations could not be loaded.'
+            : 'Os destinos da viagem nao puderam ser carregados.'
         }
       />
     )
@@ -128,11 +128,11 @@ export function TripPlacesPage() {
   if (placesQuery.isError) {
     return (
       <StateCard
-        title="Unable to load places"
+        title="Nao foi possivel carregar os lugares"
         body={
           placesQuery.error instanceof Error
             ? placesQuery.error.message
-            : 'Trip places could not be loaded.'
+            : 'Os lugares da viagem nao puderam ser carregados.'
         }
       />
     )
@@ -143,9 +143,9 @@ export function TripPlacesPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(145deg,rgba(13,90,106,0.96),rgba(20,48,76,0.95),rgba(230,126,96,0.8))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Places</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Lugares</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Save restaurants, viewpoints, beaches, and practical stops across the trip
+          Salve restaurantes, mirantes, praias e paradas uteis ao longo da viagem
         </h1>
         <div className="mt-5">
           <Button
@@ -157,7 +157,7 @@ export function TripPlacesPage() {
             }}
           >
             <Plus className="size-4" />
-            {isFormOpen && !editingPlace ? 'Hide form' : 'New place'}
+            {isFormOpen && !editingPlace ? 'Ocultar formulario' : 'Novo lugar'}
           </Button>
         </div>
       </section>
@@ -167,10 +167,10 @@ export function TripPlacesPage() {
           <CardContent className="space-y-6 p-6">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-primary">
-                {editingPlace ? 'Edit place' : 'New place'}
+                {editingPlace ? 'Editar lugar' : 'Novo lugar'}
               </p>
               <h2 className="mt-2 font-serif text-3xl">
-                {editingPlace ? editingPlace.title : 'Add a saved stop to the trip'}
+                {editingPlace ? editingPlace.title : 'Adicionar um lugar salvo na viagem'}
               </h2>
             </div>
 
@@ -189,13 +189,13 @@ export function TripPlacesPage() {
       ) : null}
 
       <section className="grid gap-4 md:grid-cols-3">
-        <MetricCard label="Saved places" value={String(places.length)} />
+        <MetricCard label="Lugares salvos" value={String(places.length)} />
         <MetricCard
-          label="Must visit"
+          label="Imperdiveis"
           value={String(places.filter((place) => place.visit_status === 'must_visit').length)}
         />
         <MetricCard
-          label="Favorites"
+          label="Favoritos"
           value={String(places.filter((place) => place.is_favorite).length)}
         />
       </section>
@@ -208,9 +208,9 @@ export function TripPlacesPage() {
                 <MapPinned className="size-5" />
               </div>
               <div>
-                <h2 className="font-serif text-2xl">Places on the map</h2>
+                <h2 className="font-serif text-2xl">Lugares no mapa</h2>
                 <p className="text-sm text-muted-foreground">
-                  Every saved place is now visible as its own marker category.
+                  Cada lugar salvo aparece no mapa com sua propria categoria.
                 </p>
               </div>
             </div>
@@ -223,9 +223,9 @@ export function TripPlacesPage() {
         <CardContent className="space-y-4 p-6">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="font-serif text-2xl">Saved places</h2>
+              <h2 className="font-serif text-2xl">Lugares salvos</h2>
               <p className="text-sm text-muted-foreground">
-                Keep the shortlist for logistics and inspiration in one place.
+                Mantenha a shortlist de logistica e inspiracao em um so lugar.
               </p>
             </div>
           </div>
@@ -243,7 +243,7 @@ export function TripPlacesPage() {
                       {place.is_favorite ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
                           <Heart className="size-3.5 fill-current" />
-                          Favorite
+                          Favorito
                         </span>
                       ) : null}
                     </div>
@@ -253,7 +253,7 @@ export function TripPlacesPage() {
                         .join(' • ')}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {place.address ?? place.notes ?? 'No extra details yet.'}
+                      {place.address ?? place.notes ?? 'Sem detalhes extras ainda.'}
                     </p>
                     <p className="mt-1 text-xs uppercase tracking-[0.2em] text-muted-foreground">
                       {place.latitude.toFixed(4)}, {place.longitude.toFixed(4)}
@@ -270,7 +270,7 @@ export function TripPlacesPage() {
                       }}
                     >
                       <Pencil className="size-4" />
-                      Edit
+                      Editar
                     </Button>
                     <Button
                       type="button"
@@ -278,7 +278,7 @@ export function TripPlacesPage() {
                       onClick={() => handleDelete(place.id)}
                     >
                       <Trash2 className="size-4" />
-                      Delete
+                      Excluir
                     </Button>
                   </div>
                 </div>
@@ -286,7 +286,7 @@ export function TripPlacesPage() {
             </div>
           ) : (
             <div className="rounded-[1.5rem] border border-dashed px-5 py-8 text-sm text-muted-foreground">
-              No saved places yet. Add a restaurant, beach, pharmacy, or favorite viewpoint to start building your map.
+              Nenhum lugar salvo ainda. Adicione restaurante, praia, farmacia ou mirante para comecar a montar seu mapa.
             </div>
           )}
         </CardContent>
@@ -310,7 +310,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Places</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Lugares</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>

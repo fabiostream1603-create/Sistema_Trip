@@ -4,10 +4,10 @@ import { NavLink, useParams } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
 const baseItems = [
-  { label: 'Home', icon: Home, path: 'dashboard' },
-  { label: 'Itinerary', icon: CalendarRange, path: 'itinerary' },
-  { label: 'Expenses', icon: Receipt, path: 'expenses' },
-  { label: 'More', icon: MoreHorizontal, path: 'settings' },
+  { label: 'Inicio', icon: Home, path: 'dashboard' },
+  { label: 'Roteiro', icon: CalendarRange, path: 'itinerary' },
+  { label: 'Gastos', icon: Receipt, path: 'expenses' },
+  { label: 'Mais', icon: MoreHorizontal, path: 'settings' },
 ] as const
 
 export function BottomNav() {

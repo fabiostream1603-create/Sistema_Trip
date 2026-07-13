@@ -64,3 +64,16 @@ export type TripDashboardData = {
   travelers: Traveler[]
   membership: TripMember | null
 }
+
+export type CreateTripInput = {
+  owner_id: string
+  owner_email?: string | null
+  traveler_name: string
+  name: string
+  description?: string
+  start_date: string
+  end_date: string
+  base_currency: CurrencyCode
+  total_budget?: number | null
+  status: TripStatus
+}

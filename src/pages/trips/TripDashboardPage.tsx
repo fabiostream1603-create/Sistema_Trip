@@ -23,12 +23,12 @@ export function TripDashboardPage() {
       <Card>
         <CardContent className="space-y-3 p-8">
           <p className="text-sm uppercase tracking-[0.3em] text-primary">
-            Trip dashboard
+            Painel da viagem
           </p>
-          <h1 className="font-serif text-4xl">Supabase connection required</h1>
+          <h1 className="font-serif text-4xl">Conexao com Supabase obrigatoria</h1>
           <p className="max-w-2xl text-muted-foreground">
-            Configure the frontend env values and run the Phase 2 migration to
-            load trip data here.
+            Configure as variaveis do frontend e rode as migrations para carregar
+            os dados da viagem aqui.
           </p>
         </CardContent>
       </Card>
@@ -53,13 +53,13 @@ export function TripDashboardPage() {
       <Card>
         <CardContent className="space-y-3 p-8">
           <p className="text-sm uppercase tracking-[0.3em] text-primary">
-            Trip dashboard
+            Painel da viagem
           </p>
-          <h1 className="font-serif text-4xl">Unable to load this trip</h1>
+          <h1 className="font-serif text-4xl">Nao foi possivel carregar esta viagem</h1>
           <p className="max-w-2xl text-muted-foreground">
             {dashboardQuery.error instanceof Error
               ? dashboardQuery.error.message
-              : 'The trip data could not be loaded.'}
+              : 'Os dados da viagem nao puderam ser carregados.'}
           </p>
         </CardContent>
       </Card>
@@ -73,28 +73,28 @@ export function TripDashboardPage() {
   )
   const cards = [
     {
-      label: 'Countdown',
-      value: `${countdownDays} days`,
+      label: 'Contagem regressiva',
+      value: `${countdownDays} dias`,
       icon: CalendarDays,
-      helper: `Trip window: ${formatDateRange(summary.start_date, summary.end_date)}`,
+      helper: `Periodo: ${formatDateRange(summary.start_date, summary.end_date)}`,
     },
     {
-      label: 'Budget snapshot',
+      label: 'Resumo do orcamento',
       value: formatCurrencyValue(summary.total_budget, summary.base_currency),
       icon: CircleDollarSign,
-      helper: 'Expense tracking lands in Phase 5',
+      helper: 'Controle de gastos ativo no app',
     },
     {
-      label: 'Travelers',
+      label: 'Viajantes',
       value: `${travelers.length}`,
       icon: Users,
-      helper: `${membership?.role ?? 'member'} access on this trip`,
+      helper: `Acesso ${membership?.role ?? 'member'} nesta viagem`,
     },
     {
-      label: 'Map readiness',
-      value: `${destinations.length} stops`,
+      label: 'Mapa da viagem',
+      value: `${destinations.length} paradas`,
       icon: Navigation,
-      helper: 'MapLibre integration arrives in Phase 3',
+      helper: 'Destinos e lugares salvos aparecem no mapa',
     },
   ] as const
 
@@ -102,18 +102,18 @@ export function TripDashboardPage() {
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(140deg,rgba(15,118,110,0.95),rgba(23,60,83,0.92),rgba(240,139,111,0.78))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
         <p className="text-sm uppercase tracking-[0.35em] text-white/75">
-          Trip dashboard
+          Painel da viagem
         </p>
         <h1 className="mt-4 max-w-xl font-serif text-4xl leading-tight">
           {summary.name}
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-white/80">
           {summary.description ??
-            'Trip workspace connected to real members, travelers, and destinations.'}
+            'Espaco da viagem conectado a membros, viajantes e destinos reais.'}
         </p>
         <div className="mt-5">
           <Button asChild variant="secondary">
-            <Link to={`/trips/${tripId}/map`}>Open trip map</Link>
+            <Link to={`/trips/${tripId}/map`}>Abrir mapa da viagem</Link>
           </Button>
         </div>
         <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/85">
@@ -126,7 +126,7 @@ export function TripDashboardPage() {
           <div className="rounded-full border border-white/20 bg-white/10 px-4 py-2">
             {summary.next_destination_city
               ? `${summary.next_destination_city}, ${summary.next_destination_country ?? ''}`
-              : 'No destination scheduled'}
+              : 'Nenhum destino programado'}
           </div>
         </div>
       </section>
@@ -156,9 +156,9 @@ export function TripDashboardPage() {
                 <MapPinned className="size-5" />
               </div>
               <div>
-                <h2 className="font-serif text-2xl">Destinations</h2>
+                <h2 className="font-serif text-2xl">Destinos</h2>
                 <p className="text-sm text-muted-foreground">
-                  Ordered trip stops already stored in Supabase.
+                  Paradas da viagem em ordem para orientar o roteiro.
                 </p>
               </div>
             </div>
@@ -180,17 +180,17 @@ export function TripDashboardPage() {
                               destination.start_date,
                               destination.end_date,
                             )
-                          : 'Dates not defined yet'}
+                          : 'Datas ainda nao definidas'}
                       </p>
                     </div>
                     <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                      {destination.timezone ?? 'timezone'}
+                      {destination.timezone ?? 'fuso'}
                     </p>
                   </div>
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  No destinations registered yet.
+                  Nenhum destino cadastrado ainda.
                 </p>
               )}
             </div>
@@ -204,9 +204,9 @@ export function TripDashboardPage() {
                 <FileText className="size-5" />
               </div>
               <div>
-                <h2 className="font-serif text-2xl">Travelers</h2>
+                <h2 className="font-serif text-2xl">Viajantes</h2>
                 <p className="text-sm text-muted-foreground">
-                  Shared trip identities and role-aware membership.
+                  Identidades compartilhadas da viagem e vinculos com membros.
                 </p>
               </div>
             </div>
@@ -220,7 +220,7 @@ export function TripDashboardPage() {
                     <div>
                       <p className="font-medium">{traveler.name}</p>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {traveler.email ?? 'No email linked'}
+                        {traveler.email ?? 'Sem e-mail vinculado'}
                       </p>
                     </div>
                     <div className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
@@ -230,7 +230,7 @@ export function TripDashboardPage() {
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  No travelers registered yet.
+                  Nenhum viajante cadastrado ainda.
                 </p>
               )}
             </div>

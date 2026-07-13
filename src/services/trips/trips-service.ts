@@ -1,5 +1,6 @@
 import { supabase } from '@/supabase/client'
 import type {
+  CreateTripInput,
   Destination,
   Traveler,
   TripDashboardData,
@@ -27,6 +28,56 @@ export async function listTrips() {
   }
 
   return (data ?? []) as TripSummary[]
+}
+
+export async function createTrip(input: CreateTripInput) {
+  const client = requireSupabase()
+  const { data, error } = await client
+    .from('trips')
+    .insert({
+      owner_id: input.owner_id,
+      name: input.name,
+      description: input.description?.trim() || null,
+      start_date: input.start_date,
+      end_date: input.end_date,
+      base_currency: input.base_currency,
+      total_budget: input.total_budget ?? null,
+      status: input.status,
+    })
+    .select('id')
+    .single()
+
+  if (error) {
+    throw error
+  }
+
+  const tripId = data.id as string
+
+  const [memberResult, travelerResult] = await Promise.all([
+    client.from('trip_members').insert({
+      trip_id: tripId,
+      user_id: input.owner_id,
+      role: 'owner',
+      invitation_status: 'accepted',
+    }),
+    client.from('travelers').insert({
+      trip_id: tripId,
+      linked_user_id: input.owner_id,
+      name: input.traveler_name,
+      email: input.owner_email || null,
+      color_identifier: 'mediterranean-blue',
+    }),
+  ])
+
+  if (memberResult.error) {
+    throw memberResult.error
+  }
+
+  if (travelerResult.error) {
+    throw travelerResult.error
+  }
+
+  return tripId
 }
 
 export async function getTripDashboardData(

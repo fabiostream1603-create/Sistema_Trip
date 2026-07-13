@@ -12,28 +12,27 @@ export function LandingPage() {
               Voyage Hub
             </p>
             <h1 className="mt-5 max-w-xl font-serif text-5xl leading-tight">
-              A calm travel HQ for itineraries, documents, budgets, and maps.
+              Um centro de controle leve para roteiro, documentos, gastos e mapa.
             </h1>
             <p className="mt-5 max-w-2xl text-muted-foreground">
-              Phase 1 delivers the production-ready frontend foundation: secure
-              auth wiring, protected routing, mobile-first layout, theme support,
-              and PWA basics for iPhone installation.
+              A base do app ja entrega autenticacao segura, rotas protegidas,
+              layout mobile-first, suporte a tema e instalacao como PWA no iPhone.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild>
-                <Link to="/login">Open login</Link>
+                <Link to="/login">Abrir login</Link>
               </Button>
               <Button asChild variant="outline">
-                <Link to="/install">Install guide</Link>
+                <Link to="/install">Guia de instalacao</Link>
               </Button>
             </div>
           </div>
           <div className="grid gap-4">
             {[
               'React 19 + TypeScript strict + Vite',
-              'Supabase client and auth provider',
-              'Protected routes and mobile navigation',
-              'Tailwind v4 + shadcn/ui foundation',
+              'Cliente Supabase e autenticacao',
+              'Rotas protegidas e navegacao mobile',
+              'Base com Tailwind v4 + shadcn/ui',
             ].map((item) => (
               <div key={item} className="rounded-[1.75rem] border bg-muted/50 p-5">
                 {item}

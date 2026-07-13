@@ -21,22 +21,22 @@ export function TripDocumentsPage() {
     }
 
     await deleteDocumentMutation.mutateAsync(document)
-    toast.success('Document removed.')
+    toast.success('Documento removido.')
   }
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before using documents." />
+    return <StateCard title="Conexao com Supabase obrigatoria" body="Configure as variaveis do ambiente e rode as migrations antes de usar os documentos." />
   }
 
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(140deg,rgba(15,118,110,0.95),rgba(23,60,83,0.92),rgba(240,139,111,0.78))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Documents</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Documentos</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Private travel documents with temporary access links
+          Documentos privados da viagem com links temporarios
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-white/80">
-          Files stay in a private Supabase bucket and are exposed only through short-lived signed URLs.
+          Os arquivos ficam em um bucket privado do Supabase e so sao expostos por URLs assinadas temporarias.
         </p>
       </section>
 
@@ -47,9 +47,9 @@ export function TripDocumentsPage() {
               <ShieldCheck className="size-5" />
             </div>
             <div>
-              <h2 className="font-serif text-2xl">Upload securely</h2>
+              <h2 className="font-serif text-2xl">Upload com seguranca</h2>
               <p className="text-sm text-muted-foreground">
-                Accepted types: PDF, JPEG, PNG, WebP. Max 10MB.
+                Tipos aceitos: PDF, JPEG, PNG e WebP. Maximo de 10 MB.
               </p>
             </div>
           </div>
@@ -64,9 +64,9 @@ export function TripDocumentsPage() {
               <FileText className="size-5" />
             </div>
             <div>
-              <h2 className="font-serif text-2xl">Document vault</h2>
+              <h2 className="font-serif text-2xl">Central de documentos</h2>
               <p className="text-sm text-muted-foreground">
-                Temporary previews and downloads for trip members only.
+                Visualizacoes e downloads temporarios apenas para membros da viagem.
               </p>
             </div>
           </div>
@@ -77,7 +77,7 @@ export function TripDocumentsPage() {
             <p className="text-sm text-muted-foreground">
               {documentsQuery.error instanceof Error
                 ? documentsQuery.error.message
-                : 'Unable to load documents.'}
+                : 'Nao foi possivel carregar os documentos.'}
             </p>
           ) : documentsQuery.data && documentsQuery.data.length > 0 ? (
             <div className="grid gap-4 lg:grid-cols-2">
@@ -129,7 +129,7 @@ export function TripDocumentsPage() {
                       />
                     ) : (
                       <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
-                        Preview unavailable
+                        Pre-visualizacao indisponivel
                       </div>
                     )}
                   </div>
@@ -139,7 +139,7 @@ export function TripDocumentsPage() {
                       <>
                         <Button asChild size="sm" variant="outline">
                           <a href={document.signed_url} rel="noreferrer" target="_blank">
-                            Open temporary link
+                            Abrir link temporario
                           </a>
                         </Button>
                         <Button asChild size="sm">
@@ -149,14 +149,14 @@ export function TripDocumentsPage() {
                             rel="noreferrer"
                             target="_blank"
                           >
-                            Download
+                            Baixar
                           </a>
                         </Button>
                       </>
                     ) : null}
                     {document.offline_priority ? (
                       <div className="rounded-full bg-secondary px-3 py-2 text-xs font-medium text-secondary-foreground">
-                        Offline priority
+                        Prioridade offline
                       </div>
                     ) : null}
                   </div>
@@ -164,7 +164,7 @@ export function TripDocumentsPage() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No documents uploaded yet.</p>
+            <p className="text-sm text-muted-foreground">Nenhum documento enviado ainda.</p>
           )}
         </CardContent>
       </Card>
@@ -176,7 +176,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Documents</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Documentos</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>

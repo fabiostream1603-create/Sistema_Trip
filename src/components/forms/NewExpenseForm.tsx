@@ -103,8 +103,8 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
 
     toast.success(
       result.queued
-        ? 'Expense saved offline. It will sync when the connection returns.'
-        : 'Expense created.',
+        ? 'Gasto salvo offline. Ele sera sincronizado quando a conexao voltar.'
+        : 'Gasto criado com sucesso.',
     )
     navigate(`/trips/${tripId}/expenses`)
   }
@@ -117,11 +117,11 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
     return (
       <Card>
         <CardContent className="space-y-3 p-8">
-          <h1 className="font-serif text-3xl">Expense form unavailable</h1>
+          <h1 className="font-serif text-3xl">Formulario de gasto indisponivel</h1>
           <p className="text-sm text-muted-foreground">
             {dataQuery.error instanceof Error
               ? dataQuery.error.message
-              : 'Unable to load categories and travelers.'}
+              : 'Nao foi possivel carregar categorias e viajantes.'}
           </p>
         </CardContent>
       </Card>
@@ -133,26 +133,26 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
       <CardContent className="space-y-6 p-6">
         <div>
           <p className="text-sm uppercase tracking-[0.3em] text-primary">
-            New expense
+            Novo gasto
           </p>
-          <h1 className="mt-2 font-serif text-4xl">Quick mobile-first expense entry</h1>
+          <h1 className="mt-2 font-serif text-4xl">Lancamento rapido de gasto</h1>
         </div>
 
         <form className="grid gap-5 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
           <Field>
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">Titulo</Label>
             <Input id="title" {...form.register('title')} />
             <ErrorText message={form.formState.errors.title?.message} />
           </Field>
 
           <Field>
-            <Label htmlFor="expense_date">Date</Label>
+            <Label htmlFor="expense_date">Data</Label>
             <Input id="expense_date" type="date" {...form.register('expense_date')} />
             <ErrorText message={form.formState.errors.expense_date?.message} />
           </Field>
 
           <Field>
-            <Label htmlFor="category_id">Category</Label>
+            <Label htmlFor="category_id">Categoria</Label>
             <select
               className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
               id="category_id"
@@ -168,7 +168,7 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
           </Field>
 
           <Field>
-            <Label htmlFor="paid_by_traveler_id">Paid by</Label>
+            <Label htmlFor="paid_by_traveler_id">Pago por</Label>
             <select
               className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
               id="paid_by_traveler_id"
@@ -184,19 +184,19 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
           </Field>
 
           <Field>
-            <Label htmlFor="original_amount">Original amount</Label>
+            <Label htmlFor="original_amount">Valor original</Label>
             <Input id="original_amount" step="0.01" type="number" {...form.register('original_amount')} />
             <ErrorText message={form.formState.errors.original_amount?.message} />
           </Field>
 
           <Field>
-            <Label htmlFor="exchange_rate">Exchange rate</Label>
+            <Label htmlFor="exchange_rate">Taxa de cambio</Label>
             <Input id="exchange_rate" step="0.000001" type="number" {...form.register('exchange_rate')} />
             <ErrorText message={form.formState.errors.exchange_rate?.message} />
           </Field>
 
           <Field>
-            <Label htmlFor="original_currency">Original currency</Label>
+            <Label htmlFor="original_currency">Moeda original</Label>
             <select
               className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
               id="original_currency"
@@ -214,40 +214,40 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
               id="status"
               {...form.register('status')}
             >
-              <option value="planned">Planned</option>
-              <option value="paid">Paid</option>
-              <option value="reimbursed">Reimbursed</option>
+              <option value="planned">Planejado</option>
+              <option value="paid">Pago</option>
+              <option value="reimbursed">Reembolsado</option>
             </select>
           </Field>
 
           <Field>
-            <Label htmlFor="payment_method">Payment method</Label>
+            <Label htmlFor="payment_method">Forma de pagamento</Label>
             <select
               className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
               id="payment_method"
               {...form.register('payment_method')}
             >
-              <option value="card">Card</option>
-              <option value="cash">Cash</option>
+              <option value="card">Cartao</option>
+              <option value="cash">Dinheiro</option>
               <option value="pix">Pix</option>
-              <option value="transfer">Transfer</option>
-              <option value="other">Other</option>
+              <option value="transfer">Transferencia</option>
+              <option value="other">Outro</option>
             </select>
           </Field>
 
           <Field>
-            <Label htmlFor="city">City</Label>
+            <Label htmlFor="city">Cidade</Label>
             <Input id="city" {...form.register('city')} />
           </Field>
 
           <Field>
-            <Label htmlFor="country">Country</Label>
+            <Label htmlFor="country">Pais</Label>
             <Input id="country" {...form.register('country')} />
           </Field>
 
           <div className="md:col-span-2">
             <Field>
-              <Label htmlFor="notes">Notes</Label>
+              <Label htmlFor="notes">Observacoes</Label>
               <textarea
                 className="min-h-28 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none"
                 id="notes"
@@ -258,7 +258,7 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
 
           <div className="md:col-span-2 flex justify-end">
             <Button disabled={createExpenseMutation.isPending} type="submit">
-              Save expense
+              Salvar gasto
             </Button>
           </div>
         </form>

@@ -11,17 +11,17 @@ export function LoginPage() {
               Voyage Hub
             </p>
             <h2 className="mt-6 max-w-lg font-serif text-5xl leading-tight">
-              A premium travel command center for Italy and Greece.
+              Seu centro de controle de viagens para planejar tudo em um so lugar.
             </h2>
             <p className="mt-4 max-w-md text-white/80">
-              Built for shared itineraries, document safety, smart budgeting, and
-              calm mobile access while you are on the move.
+              Planeje roteiro, documentos, gastos e detalhes importantes com
+              acesso facil no celular durante toda a viagem.
             </p>
           </div>
           <div className="grid gap-3 text-sm text-white/85 sm:grid-cols-3">
-            <FeaturePill label="PWA on iPhone" />
-            <FeaturePill label="Secure Supabase Auth" />
-            <FeaturePill label="Offline-ready shell" />
+            <FeaturePill label="PWA no iPhone" />
+            <FeaturePill label="Login seguro com Supabase" />
+            <FeaturePill label="Base pronta para offline" />
           </div>
         </section>
 
@@ -30,10 +30,10 @@ export function LoginPage() {
             <LoginForm />
             <div className="mt-4 flex items-center justify-between px-2 text-sm text-muted-foreground">
               <Link className="hover:text-foreground" to="/forgot-password">
-                Forgot password?
+                Esqueceu a senha?
               </Link>
               <Link className="hover:text-foreground" to="/install">
-                Install on iPhone
+                Instalar no iPhone
               </Link>
             </div>
           </div>

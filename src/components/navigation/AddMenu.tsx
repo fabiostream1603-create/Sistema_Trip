@@ -11,27 +11,27 @@ import {
 
 const items = [
   {
-    label: 'New expense',
+    label: 'Novo gasto',
     icon: Receipt,
     segment: 'expenses/new',
   },
   {
-    label: 'New activity',
+    label: 'Nova atividade',
     icon: Waypoints,
     segment: 'itinerary',
   },
   {
-    label: 'New place',
+    label: 'Novo lugar',
     icon: MapPin,
     segment: 'places',
   },
   {
-    label: 'New document',
+    label: 'Novo documento',
     icon: FileText,
     segment: 'documents',
   },
   {
-    label: 'New checklist',
+    label: 'Nova checklist',
     icon: SquareCheckBig,
     segment: 'checklists',
   },
@@ -45,12 +45,12 @@ export function AddMenu({ trigger }: { trigger: ReactNode }) {
   }
 
   return (
-    <Sheet>
+      <Sheet>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
       <SheetContent side="bottom" className="sm:max-w-lg">
-        <SheetTitle className="font-serif text-2xl">Add something quickly</SheetTitle>
+        <SheetTitle className="font-serif text-2xl">Adicionar rapidamente</SheetTitle>
         <SheetDescription className="mt-2 text-sm text-muted-foreground">
-          Mobile-first shortcuts for the most common travel updates.
+          Atalhos para os cadastros e atualizacoes mais comuns da viagem.
         </SheetDescription>
         <div className="mt-6 grid gap-3">
           {items.map(({ label, icon: Icon, segment }) => (

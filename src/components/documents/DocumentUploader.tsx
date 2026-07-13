@@ -42,7 +42,7 @@ export function DocumentUploader({ tripId }: { tripId: string }) {
 
   async function onSubmit(values: DocumentFormValues) {
     if (!file || !session?.user.id) {
-      toast.error('Choose a file before uploading.')
+      toast.error('Escolha um arquivo antes de enviar.')
       return
     }
 
@@ -55,7 +55,7 @@ export function DocumentUploader({ tripId }: { tripId: string }) {
       traveler_id: values.traveler_id || undefined,
     })
 
-    toast.success('Document uploaded securely.')
+    toast.success('Documento enviado com seguranca.')
     setFile(null)
     setProgress(0)
     form.reset()
@@ -64,37 +64,37 @@ export function DocumentUploader({ tripId }: { tripId: string }) {
   return (
     <form className="grid gap-4 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
       <Field>
-        <Label htmlFor="title">Title</Label>
+        <Label htmlFor="title">Titulo</Label>
         <Input id="title" {...form.register('title')} />
         <ErrorText message={form.formState.errors.title?.message} />
       </Field>
 
       <Field>
-        <Label htmlFor="category">Category</Label>
+        <Label htmlFor="category">Categoria</Label>
         <select
           className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
           id="category"
           {...form.register('category')}
         >
-          <option value="passport">Passport</option>
-          <option value="ticket">Ticket</option>
-          <option value="booking">Booking</option>
-          <option value="insurance">Insurance</option>
-          <option value="receipt">Receipt</option>
-          <option value="identity">Identity</option>
-          <option value="health">Health</option>
-          <option value="other">Other</option>
+          <option value="passport">Passaporte</option>
+          <option value="ticket">Ingresso</option>
+          <option value="booking">Reserva</option>
+          <option value="insurance">Seguro</option>
+          <option value="receipt">Comprovante</option>
+          <option value="identity">Identidade</option>
+          <option value="health">Saude</option>
+          <option value="other">Outro</option>
         </select>
       </Field>
 
       <Field>
-        <Label htmlFor="traveler_id">Traveler</Label>
+        <Label htmlFor="traveler_id">Viajante</Label>
         <select
           className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
           id="traveler_id"
           {...form.register('traveler_id')}
         >
-          <option value="">No traveler link</option>
+          <option value="">Sem vinculo com viajante</option>
           {(supportQuery.data?.travelers ?? []).map((traveler) => (
             <option key={traveler.id} value={traveler.id}>
               {traveler.name}
@@ -104,7 +104,7 @@ export function DocumentUploader({ tripId }: { tripId: string }) {
       </Field>
 
       <Field>
-        <Label htmlFor="file">File</Label>
+        <Label htmlFor="file">Arquivo</Label>
         <Input
           id="file"
           type="file"
@@ -114,17 +114,17 @@ export function DocumentUploader({ tripId }: { tripId: string }) {
       </Field>
 
       <Field>
-        <Label htmlFor="issue_date">Issue date</Label>
+        <Label htmlFor="issue_date">Data de emissao</Label>
         <Input id="issue_date" type="date" {...form.register('issue_date')} />
       </Field>
 
       <Field>
-        <Label htmlFor="expiration_date">Expiration date</Label>
+        <Label htmlFor="expiration_date">Data de validade</Label>
         <Input id="expiration_date" type="date" {...form.register('expiration_date')} />
       </Field>
 
       <div className="md:col-span-2 space-y-2">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Descricao</Label>
         <textarea
           className="min-h-24 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none"
           id="description"
@@ -134,12 +134,12 @@ export function DocumentUploader({ tripId }: { tripId: string }) {
 
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" {...form.register('is_favorite')} />
-        Favorite
+        Favorito
       </label>
 
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" {...form.register('offline_priority')} />
-        Prepare for offline access later
+        Preparar para acesso offline
       </label>
 
       <div className="md:col-span-2">
@@ -151,7 +151,7 @@ export function DocumentUploader({ tripId }: { tripId: string }) {
         </div>
         <Button disabled={uploadDocument.isPending} type="submit">
           <Upload className="size-4" />
-          Upload document
+          Enviar documento
         </Button>
       </div>
     </form>

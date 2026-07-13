@@ -62,11 +62,11 @@ export function TripSettingsPage() {
       total_budget: values.total_budget === '' ? null : values.total_budget,
     })
 
-    toast.success('Trip settings saved.')
+    toast.success('Configuracoes da viagem salvas.')
   }
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before editing trip settings." />
+    return <StateCard title="Conexao com Supabase obrigatoria" body="Configure as variaveis do ambiente e rode as migrations antes de editar a viagem." />
   }
 
   if (tripSettingsQuery.isLoading) {
@@ -76,11 +76,11 @@ export function TripSettingsPage() {
   if (tripSettingsQuery.isError || !tripSettingsQuery.data) {
     return (
       <StateCard
-        title="Unable to load trip settings"
+        title="Nao foi possivel carregar as configuracoes da viagem"
         body={
           tripSettingsQuery.error instanceof Error
             ? tripSettingsQuery.error.message
-            : 'Trip settings could not be loaded.'
+            : 'As configuracoes da viagem nao puderam ser carregadas.'
         }
       />
     )
@@ -91,22 +91,22 @@ export function TripSettingsPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(145deg,rgba(17,95,82,0.96),rgba(24,48,73,0.95),rgba(235,139,104,0.8))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Trip settings</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Configuracoes da viagem</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Control trip identity, budget boundaries, timing, and member access context
+          Controle identidade, datas, orcamento e contexto de acesso da viagem
         </h1>
       </section>
 
       <Card>
         <CardContent className="space-y-6 p-6">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-primary">Trip basics</p>
-            <h2 className="mt-2 font-serif text-3xl">Core planning settings</h2>
+            <p className="text-sm uppercase tracking-[0.3em] text-primary">Dados principais</p>
+            <h2 className="mt-2 font-serif text-3xl">Configuracoes centrais do planejamento</h2>
           </div>
 
           <form className="grid gap-5 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
             <Field>
-              <Label htmlFor="name">Trip name</Label>
+              <Label htmlFor="name">Nome da viagem</Label>
               <Input id="name" {...form.register('name')} />
               <ErrorText message={form.formState.errors.name?.message} />
             </Field>
@@ -118,28 +118,28 @@ export function TripSettingsPage() {
                 id="status"
                 {...form.register('status')}
               >
-                <option value="planning">Planning</option>
-                <option value="booked">Booked</option>
-                <option value="in_progress">In progress</option>
-                <option value="completed">Completed</option>
-                <option value="archived">Archived</option>
+                <option value="planning">Planejamento</option>
+                <option value="booked">Reservada</option>
+                <option value="in_progress">Em andamento</option>
+                <option value="completed">Concluida</option>
+                <option value="archived">Arquivada</option>
               </select>
             </Field>
 
             <Field>
-              <Label htmlFor="start_date">Start date</Label>
+              <Label htmlFor="start_date">Data de inicio</Label>
               <Input id="start_date" type="date" {...form.register('start_date')} />
               <ErrorText message={form.formState.errors.start_date?.message} />
             </Field>
 
             <Field>
-              <Label htmlFor="end_date">End date</Label>
+              <Label htmlFor="end_date">Data de fim</Label>
               <Input id="end_date" type="date" {...form.register('end_date')} />
               <ErrorText message={form.formState.errors.end_date?.message} />
             </Field>
 
             <Field>
-              <Label htmlFor="base_currency">Base currency</Label>
+              <Label htmlFor="base_currency">Moeda base</Label>
               <select
                 className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
                 id="base_currency"
@@ -151,14 +151,14 @@ export function TripSettingsPage() {
             </Field>
 
             <Field>
-              <Label htmlFor="total_budget">Total budget</Label>
+              <Label htmlFor="total_budget">Orcamento total</Label>
               <Input id="total_budget" step="0.01" type="number" {...form.register('total_budget')} />
               <ErrorText message={form.formState.errors.total_budget?.message?.toString()} />
             </Field>
 
             <div className="md:col-span-2">
               <Field>
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">Descricao</Label>
                 <textarea
                   className="min-h-28 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none"
                   id="description"
@@ -169,7 +169,7 @@ export function TripSettingsPage() {
 
             <div className="md:col-span-2 flex justify-end">
               <Button disabled={updateTripMutation.isPending} type="submit">
-                Save trip settings
+                Salvar configuracoes
               </Button>
             </div>
           </form>
@@ -179,9 +179,9 @@ export function TripSettingsPage() {
       <Card>
         <CardContent className="space-y-4 p-6">
           <div>
-            <h2 className="font-serif text-2xl">Member access overview</h2>
+            <h2 className="font-serif text-2xl">Resumo de acesso dos membros</h2>
             <p className="text-sm text-muted-foreground">
-              Roles remain managed in Supabase, but the trip can now surface its access context in-app.
+              Os papeis continuam protegidos pelo Supabase, mas o app exibe esse contexto aqui.
             </p>
           </div>
 
@@ -221,7 +221,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Trip settings</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Configuracoes da viagem</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>
