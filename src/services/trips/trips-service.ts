@@ -53,27 +53,28 @@ export async function createTrip(input: CreateTripInput) {
 
   const tripId = data.id as string
 
-  const [memberResult, travelerResult] = await Promise.all([
-    client.from('trip_members').insert({
-      trip_id: tripId,
-      user_id: input.owner_id,
-      role: 'owner',
-      invitation_status: 'accepted',
-    }),
-    client.from('travelers').insert({
-      trip_id: tripId,
-      linked_user_id: input.owner_id,
-      name: input.traveler_name,
-      email: input.owner_email || null,
-      color_identifier: 'mediterranean-blue',
-    }),
-  ])
+  const memberResult = await client.from('trip_members').insert({
+    trip_id: tripId,
+    user_id: input.owner_id,
+    role: 'owner',
+    invitation_status: 'accepted',
+  })
 
   if (memberResult.error) {
+    await client.from('trips').delete().eq('id', tripId)
     throw memberResult.error
   }
 
+  const travelerResult = await client.from('travelers').insert({
+    trip_id: tripId,
+    linked_user_id: input.owner_id,
+    name: input.traveler_name,
+    email: input.owner_email || null,
+    color_identifier: 'mediterranean-blue',
+  })
+
   if (travelerResult.error) {
+    await client.from('trips').delete().eq('id', tripId)
     throw travelerResult.error
   }
 

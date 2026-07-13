@@ -14,6 +14,17 @@ import { formatCurrencyValue, formatDateRange } from '@/lib/formatters'
 import { hasSupabaseEnv } from '@/supabase/client'
 import { toast } from 'sonner'
 
+function buildDefaultTripDates() {
+  const start = new Date()
+  const end = new Date()
+  end.setDate(end.getDate() + 7)
+
+  return {
+    start_date: start.toISOString().slice(0, 10),
+    end_date: end.toISOString().slice(0, 10),
+  }
+}
+
 const createTripSchema = z
   .object({
     name: z.string().min(3, 'Informe um nome com pelo menos 3 caracteres.'),
@@ -35,46 +46,53 @@ export function TripsPage() {
   const { session } = useAuth()
   const navigate = useNavigate()
   const tripsQuery = useTrips()
+  const defaultDates = buildDefaultTripDates()
   const createTripMutation = useCreateTrip()
   const form = useForm<CreateTripInputValues, undefined, CreateTripValues>({
     resolver: zodResolver(createTripSchema),
     defaultValues: {
       name: '',
       description: '',
-      start_date: '',
-      end_date: '',
+      start_date: defaultDates.start_date,
+      end_date: defaultDates.end_date,
       base_currency: 'EUR',
       total_budget: 0,
     },
   })
 
   async function onCreateTrip(values: CreateTripValues) {
-    if (!session?.user.id) {
-      toast.error('Voce precisa estar autenticado para criar uma viagem.')
-      return
+    try {
+      if (!session?.user.id) {
+        toast.error('Voce precisa estar autenticado para criar uma viagem.')
+        return
+      }
+
+      const travelerName =
+        typeof session.user.user_metadata?.full_name === 'string' &&
+        session.user.user_metadata.full_name.trim().length > 0
+          ? session.user.user_metadata.full_name.trim()
+          : 'Viajante principal'
+
+      const tripId = await createTripMutation.mutateAsync({
+        owner_id: session.user.id,
+        owner_email: session.user.email ?? null,
+        traveler_name: travelerName,
+        name: values.name,
+        description: values.description,
+        start_date: values.start_date,
+        end_date: values.end_date,
+        base_currency: values.base_currency,
+        total_budget: values.total_budget,
+        status: 'planning',
+      })
+
+      toast.success('Viagem criada com sucesso.')
+      navigate(`/trips/${tripId}/dashboard`)
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Nao foi possivel criar a viagem agora.'
+      toast.error(message)
     }
-
-    const travelerName =
-      typeof session.user.user_metadata?.full_name === 'string' &&
-      session.user.user_metadata.full_name.trim().length > 0
-        ? session.user.user_metadata.full_name.trim()
-        : 'Viajante principal'
-
-    const tripId = await createTripMutation.mutateAsync({
-      owner_id: session.user.id,
-      owner_email: session.user.email ?? null,
-      traveler_name: travelerName,
-      name: values.name,
-      description: values.description,
-      start_date: values.start_date,
-      end_date: values.end_date,
-      base_currency: values.base_currency,
-      total_budget: values.total_budget,
-      status: 'planning',
-    })
-
-    toast.success('Viagem criada com sucesso.')
-    navigate(`/trips/${tripId}/dashboard`)
   }
 
   if (!hasSupabaseEnv) {
