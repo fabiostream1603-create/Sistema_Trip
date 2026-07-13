@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { CalendarRange, Home, MoreHorizontal, Receipt, Route } from 'lucide-react'
+import { CalendarRange, Home, MoreHorizontal, Receipt } from 'lucide-react'
 import { NavLink, useParams } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
@@ -27,7 +27,7 @@ export function BottomNav() {
         <li>
           <div className="flex justify-center">
             <div className="rounded-full bg-primary/10 p-3 text-primary">
-              <Route className="size-5" />
+              <Receipt className="size-5" />
             </div>
           </div>
         </li>

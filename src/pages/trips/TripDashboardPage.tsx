@@ -7,7 +7,8 @@ import {
   Navigation,
   Users,
 } from 'lucide-react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useTripDashboard } from '@/features/trips/use-trip-dashboard'
 import { formatCurrencyValue, formatDateRange } from '@/lib/formatters'
@@ -110,6 +111,11 @@ export function TripDashboardPage() {
           {summary.description ??
             'Trip workspace connected to real members, travelers, and destinations.'}
         </p>
+        <div className="mt-5">
+          <Button asChild variant="secondary">
+            <Link to={`/trips/${tripId}/map`}>Open trip map</Link>
+          </Button>
+        </div>
         <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/85">
           <div className="rounded-full border border-white/20 bg-white/10 px-4 py-2">
             {formatDateRange(summary.start_date, summary.end_date)}

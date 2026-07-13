@@ -11,6 +11,7 @@ import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage'
 import { InstallPage } from '@/pages/InstallPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
+import { TripMapPage } from '@/pages/trips/TripMapPage'
 import { TripsPage } from '@/pages/trips/TripsPage'
 import { TripDashboardPage } from '@/pages/trips/TripDashboardPage'
 
@@ -103,12 +104,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ':tripId/map',
-        element: (
-          <PlaceholderPage
-            title="Trip Map"
-            description="MapLibre-powered trip map arrives in Phase 3."
-          />
-        ),
+        element: <TripMapPage />,
       },
       {
         path: ':tripId/places',
