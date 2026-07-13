@@ -20,6 +20,7 @@ import { TripDocumentsPage } from '@/pages/trips/TripDocumentsPage'
 import { TripExpensesPage } from '@/pages/trips/TripExpensesPage'
 import { TripItineraryPage } from '@/pages/trips/TripItineraryPage'
 import { TripMapPage } from '@/pages/trips/TripMapPage'
+import { TripPlacesPage } from '@/pages/trips/TripPlacesPage'
 import { TripTransportsPage } from '@/pages/trips/TripTransportsPage'
 import { TripsPage } from '@/pages/trips/TripsPage'
 import { TripDashboardPage } from '@/pages/trips/TripDashboardPage'
@@ -107,12 +108,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ':tripId/places',
-        element: (
-          <PlaceholderPage
-            title="Places"
-            description="Saved places, favorites, and manual coordinate entry."
-          />
-        ),
+        element: <TripPlacesPage />,
       },
       {
         path: ':tripId/expenses',

@@ -629,4 +629,64 @@ begin
     on checklist.trip_id = trip_id
    and checklist.title = item_seed.checklist_title
   on conflict do nothing;
+
+  insert into public.places (
+    trip_id,
+    destination_id,
+    created_by,
+    title,
+    category,
+    city,
+    country,
+    address,
+    latitude,
+    longitude,
+    notes,
+    website_url,
+    phone,
+    price_level,
+    visit_status,
+    is_favorite
+  )
+  select
+    trip_id,
+    destination.id,
+    owner_user_id,
+    place_seed.title,
+    place_seed.category,
+    destination.city,
+    destination.country,
+    place_seed.address,
+    place_seed.latitude,
+    place_seed.longitude,
+    place_seed.notes,
+    place_seed.website_url,
+    place_seed.phone,
+    place_seed.price_level,
+    place_seed.visit_status,
+    place_seed.is_favorite
+  from (
+    values
+      ('Rome', 'Roscioli', 'restaurant', 'Via dei Giubbonari 21, Rome', 41.894484, 12.472943, 'Strong first-night dinner option.', 'https://www.salumeriaroscioli.com', '+39 06 687 5287', 3, 'must_visit', true),
+      ('Santorini', 'Oia Castle Sunset Point', 'viewpoint', 'Oia, Santorini', 36.461525, 25.375363, 'Go early to avoid the biggest crowd.', null, null, null, 'must_visit', true),
+      ('Milos', 'Sarakiniko Beach', 'beach', 'Sarakiniko, Milos', 36.731714, 24.432516, 'White rock beach day with photo stop.', null, null, null, 'saved', false),
+      ('Athens', '24-hour pharmacy near Syntagma', 'pharmacy', 'Syntagma Square, Athens', 37.975532, 23.734833, 'Useful fallback stop on arrival in Athens.', null, null, null, 'saved', false)
+  ) as place_seed(
+    city_name,
+    title,
+    category,
+    address,
+    latitude,
+    longitude,
+    notes,
+    website_url,
+    phone,
+    price_level,
+    visit_status,
+    is_favorite
+  )
+  join public.destinations destination
+    on destination.trip_id = trip_id
+   and destination.city = place_seed.city_name
+  on conflict do nothing;
 end $$;

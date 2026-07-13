@@ -8,6 +8,7 @@ import { UserLocationControl } from '@/components/maps/UserLocationControl'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useTripLogistics } from '@/features/logistics/use-trip-logistics'
+import { useTripPlaces } from '@/features/places/use-trip-places'
 import { useTripDashboard } from '@/features/trips/use-trip-dashboard'
 import {
   haversineDistanceInKm,
@@ -21,6 +22,7 @@ export function TripMapPage() {
   const { tripId = '' } = useParams()
   const dashboardQuery = useTripDashboard(tripId)
   const logisticsQuery = useTripLogistics(tripId)
+  const placesQuery = useTripPlaces(tripId)
   const [selectedCity, setSelectedCity] = useState<string>('all')
   const [selectedCountry, setSelectedCountry] = useState<string>('all')
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null)
@@ -130,8 +132,30 @@ export function TripMapPage() {
         return pointsForSegment
       }) ?? []
 
-    return [...destinationPoints, ...accommodationPoints, ...transportPoints]
-  }, [dashboardQuery.data?.destinations, logisticsQuery.data])
+    const savedPlacePoints =
+      placesQuery.data?.map((place) => ({
+        id: place.id,
+        title: place.title,
+        subtitle:
+          [place.category, place.city, place.country].filter(Boolean).join(' • ') ||
+          place.address ||
+          'Saved place',
+        category: place.category,
+        country: place.country,
+        city: place.city,
+        latitude: place.latitude,
+        longitude: place.longitude,
+        notes: place.notes,
+        navigationLabel: place.title,
+      })) ?? []
+
+    return [
+      ...destinationPoints,
+      ...accommodationPoints,
+      ...transportPoints,
+      ...savedPlacePoints,
+    ]
+  }, [dashboardQuery.data?.destinations, logisticsQuery.data, placesQuery.data])
 
   const filteredPoints = useMemo(
     () =>
