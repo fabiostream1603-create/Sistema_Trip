@@ -19,7 +19,7 @@ export function TopBar() {
   return (
     <header className="glass-panel sticky top-3 z-30 rounded-[2rem] border px-4 py-3 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between gap-3">
-        <Link to="/trips/demo-trip/dashboard" className="flex items-center gap-3">
+        <Link to="/trips" className="flex items-center gap-3">
           <div className="rounded-full bg-primary/10 p-2 text-primary">
             <Compass className="size-5" />
           </div>

@@ -38,7 +38,11 @@ const items = [
 ] as const
 
 export function AddMenu({ trigger }: { trigger: ReactNode }) {
-  const { tripId = 'demo-trip' } = useParams()
+  const { tripId } = useParams()
+
+  if (!tripId) {
+    return <>{trigger}</>
+  }
 
   return (
     <Sheet>

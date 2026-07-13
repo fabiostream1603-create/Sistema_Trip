@@ -1,11 +1,18 @@
 # Database
 
-Phase 1 does not yet ship SQL migrations. The frontend route structure and auth flow are prepared for Supabase-backed trip data.
+Phase 2 adds the first real database layer in `supabase/migrations/20260712234500_phase2_core_schema.sql`.
 
-Phase 2 should add:
+Included now:
 
-- versioned SQL migrations
-- profile and trip schema
-- RLS policies
-- membership helpers
-- development seed data
+- `profiles`
+- `trips`
+- `trip_members`
+- `travelers`
+- `destinations`
+- `set_updated_at()` trigger helper
+- `handle_new_user_profile()` auth trigger
+- `is_trip_member()`, `owns_trip()`, and `has_trip_role()`
+- RLS enabled on every public table created in this phase
+- dashboard and future-facing placeholder views
+
+Seed guidance lives in `supabase/seed.sql` and expects real Auth users to exist first.

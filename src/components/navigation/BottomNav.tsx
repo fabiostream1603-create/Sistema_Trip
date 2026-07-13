@@ -11,14 +11,15 @@ const baseItems = [
 ] as const
 
 export function BottomNav() {
-  const { tripId = 'demo-trip' } = useParams()
+  const { tripId } = useParams()
+  const basePath = tripId ? `/trips/${tripId}` : '/trips'
 
   return (
     <nav className="glass-panel fixed inset-x-3 bottom-3 z-40 rounded-[2rem] border p-2 shadow-[var(--shadow-card)] md:hidden">
       <ul className="grid grid-cols-5 items-center gap-1">
         {baseItems.slice(0, 2).map(({ label, icon: Icon, path }) => (
           <li key={label}>
-            <BottomNavLink to={`/trips/${tripId}/${path}`} label={label}>
+            <BottomNavLink to={tripId ? `${basePath}/${path}` : basePath} label={label}>
               <Icon className="size-5" />
             </BottomNavLink>
           </li>
@@ -32,7 +33,7 @@ export function BottomNav() {
         </li>
         {baseItems.slice(2).map(({ label, icon: Icon, path }) => (
           <li key={label}>
-            <BottomNavLink to={`/trips/${tripId}/${path}`} label={label}>
+            <BottomNavLink to={tripId ? `${basePath}/${path}` : basePath} label={label}>
               <Icon className="size-5" />
             </BottomNavLink>
           </li>

@@ -11,6 +11,7 @@ import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage'
 import { InstallPage } from '@/pages/InstallPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
+import { TripsPage } from '@/pages/trips/TripsPage'
 import { TripDashboardPage } from '@/pages/trips/TripDashboardPage'
 
 function ProtectedLayout() {
@@ -72,12 +73,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <PlaceholderPage
-            title="Trips"
-            description="Create and manage your trips from a single dashboard."
-          />
-        ),
+        element: <TripsPage />,
       },
       {
         path: ':tripId',
