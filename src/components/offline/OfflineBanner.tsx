@@ -20,19 +20,22 @@ export function OfflineBanner() {
           <CloudOff className="size-4 text-primary" />
           <p>
             {isOnline
-              ? 'A new version is ready. Refresh to update the app shell.'
-              : 'You are offline. Cached trip data remains available and new syncs resume when the connection returns.'}
+              ? 'Uma nova versao esta pronta. Atualize para carregar a versao mais recente do app.'
+              : 'Voce esta offline. Os dados em cache continuam disponiveis e a sincronizacao volta quando a conexao retornar.'}
           </p>
           {isOnline && pendingMutations > 0 ? (
             <p>
-              {pendingMutations} pending {pendingMutations === 1 ? 'change is' : 'changes are'} waiting to sync.
+              {pendingMutations}{' '}
+              {pendingMutations === 1
+                ? 'alteracao pendente aguardando sincronizacao.'
+                : 'alteracoes pendentes aguardando sincronizacao.'}
             </p>
           ) : null}
         </div>
         {needRefresh ? (
           <Button size="sm" variant="secondary" onClick={() => updateServiceWorker(true)}>
             <RefreshCw className="size-4" />
-            Update
+            Atualizar
           </Button>
         ) : null}
       </div>

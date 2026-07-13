@@ -23,47 +23,47 @@ export const mapCategoryMeta: Record<
 > = {
   accommodation: {
     icon: BedDouble,
-    label: 'Accommodation',
+    label: 'Hospedagem',
     markerClassName: 'bg-sky-100 text-sky-700 border-sky-200',
   },
   restaurant: {
     icon: Soup,
-    label: 'Restaurant',
+    label: 'Restaurante',
     markerClassName: 'bg-orange-100 text-orange-700 border-orange-200',
   },
   attraction: {
     icon: Landmark,
-    label: 'Attraction',
+    label: 'Atracao',
     markerClassName: 'bg-amber-100 text-amber-700 border-amber-200',
   },
   beach: {
     icon: Waves,
-    label: 'Beach',
+    label: 'Praia',
     markerClassName: 'bg-cyan-100 text-cyan-700 border-cyan-200',
   },
   airport: {
     icon: Plane,
-    label: 'Airport',
+    label: 'Aeroporto',
     markerClassName: 'bg-slate-100 text-slate-700 border-slate-200',
   },
   port: {
     icon: ShipWheel,
-    label: 'Port',
+    label: 'Porto',
     markerClassName: 'bg-blue-100 text-blue-700 border-blue-200',
   },
   train_station: {
     icon: TrainFront,
-    label: 'Train station',
+    label: 'Estacao de trem',
     markerClassName: 'bg-violet-100 text-violet-700 border-violet-200',
   },
   bus_station: {
     icon: BusFront,
-    label: 'Bus station',
+    label: 'Rodoviaria',
     markerClassName: 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200',
   },
   pharmacy: {
     icon: Cross,
-    label: 'Pharmacy',
+    label: 'Farmacia',
     markerClassName: 'bg-emerald-100 text-emerald-700 border-emerald-200',
   },
   hospital: {
@@ -78,22 +78,22 @@ export const mapCategoryMeta: Record<
   },
   viewpoint: {
     icon: Mountain,
-    label: 'Viewpoint',
+    label: 'Mirante',
     markerClassName: 'bg-lime-100 text-lime-700 border-lime-200',
   },
   activity: {
     icon: Activity,
-    label: 'Activity',
+    label: 'Atividade',
     markerClassName: 'bg-yellow-100 text-yellow-700 border-yellow-200',
   },
   other: {
     icon: BadgePlus,
-    label: 'Other',
+    label: 'Outro',
     markerClassName: 'bg-stone-100 text-stone-700 border-stone-200',
   },
   destination: {
     icon: MapPin,
-    label: 'Destination',
+    label: 'Destino',
     markerClassName: 'bg-primary/15 text-primary border-primary/30',
   },
 }

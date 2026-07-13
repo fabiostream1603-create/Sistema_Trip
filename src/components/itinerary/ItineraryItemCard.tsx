@@ -49,11 +49,11 @@ export function ItineraryItemCard({
             <p className="mt-1 text-muted-foreground">{item.status}</p>
           </div>
           <div className="rounded-2xl border bg-muted/40 px-4 py-3 text-sm">
-            <p className="font-medium">{item.address ?? 'Address not defined'}</p>
+            <p className="font-medium">{item.address ?? 'Endereco nao definido'}</p>
             <p className="mt-1 text-muted-foreground">
               {item.expected_cost !== null && item.currency
-                ? `${item.currency} ${item.expected_cost.toFixed(2)} expected`
-                : 'No expected cost'}
+                ? `${item.currency} ${item.expected_cost.toFixed(2)} previstos`
+                : 'Sem custo previsto'}
             </p>
           </div>
         </div>
@@ -62,12 +62,12 @@ export function ItineraryItemCard({
           <Button asChild size="sm" variant="outline">
             <Link to={`/trips/${tripId}/map`}>
               <MapPinned className="size-4" />
-              Open on map
+              Abrir no mapa
             </Link>
           </Button>
           {item.rain_plan ? (
             <div className="rounded-full bg-secondary px-3 py-2 text-xs font-medium text-secondary-foreground">
-              Rain plan: {item.rain_plan}
+              Plano para chuva: {item.rain_plan}
             </div>
           ) : null}
         </div>

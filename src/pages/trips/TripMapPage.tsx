@@ -31,6 +31,7 @@ export function TripMapPage() {
   const points = useMemo<MapPoint[]>(() => {
     const destinations = dashboardQuery.data?.destinations ?? []
     const logistics = logisticsQuery.data
+
     const destinationPoints = destinations
       .filter((destination) =>
         isValidCoordinates({
@@ -38,11 +39,11 @@ export function TripMapPage() {
           longitude: destination.longitude ?? Number.NaN,
         }),
       )
-        .map((destination) => ({
-          id: destination.id,
-          title: destination.city,
-          subtitle: destination.country,
-          category: 'destination' as const,
+      .map((destination) => ({
+        id: destination.id,
+        title: destination.city,
+        subtitle: destination.country,
+        category: 'destination' as const,
         country: destination.country,
         city: destination.city,
         latitude: destination.latitude!,
@@ -57,6 +58,7 @@ export function TripMapPage() {
             : undefined,
         navigationLabel: `${destination.city}, ${destination.country}`,
       }))
+
     const accommodationPoints =
       logistics?.accommodations
         .filter((stay) =>
@@ -68,10 +70,10 @@ export function TripMapPage() {
         .map((stay) => ({
           id: stay.id,
           title: stay.name,
-          subtitle: stay.address ?? 'Accommodation',
+          subtitle: stay.address ?? 'Hospedagem',
           category: 'accommodation' as const,
           country: null,
-          city: stay.address ?? 'Accommodation',
+          city: stay.address ?? 'Hospedagem',
           latitude: stay.latitude!,
           longitude: stay.longitude!,
           notes: stay.notes,
@@ -84,9 +86,11 @@ export function TripMapPage() {
               : undefined,
           navigationLabel: stay.name,
         })) ?? []
+
     const transportPoints =
       logistics?.transportSegments.flatMap((segment) => {
         const pointsForSegment: MapPoint[] = []
+
         if (
           isValidCoordinates({
             latitude: segment.origin_latitude ?? Number.NaN,
@@ -96,7 +100,7 @@ export function TripMapPage() {
           pointsForSegment.push({
             id: `${segment.id}-origin`,
             title: segment.origin_name,
-            subtitle: `${segment.transport_type} origin`,
+            subtitle: `Origem por ${segment.transport_type}`,
             category: getTransportMapCategory(segment.transport_type),
             country: null,
             city: segment.origin_name,
@@ -107,6 +111,7 @@ export function TripMapPage() {
             navigationLabel: segment.origin_name,
           })
         }
+
         if (
           isValidCoordinates({
             latitude: segment.destination_latitude ?? Number.NaN,
@@ -116,7 +121,7 @@ export function TripMapPage() {
           pointsForSegment.push({
             id: `${segment.id}-destination`,
             title: segment.destination_name,
-            subtitle: `${segment.transport_type} destination`,
+            subtitle: `Destino por ${segment.transport_type}`,
             category: getTransportMapCategory(segment.transport_type),
             country: null,
             city: segment.destination_name,
@@ -129,6 +134,7 @@ export function TripMapPage() {
             navigationLabel: segment.destination_name,
           })
         }
+
         return pointsForSegment
       }) ?? []
 
@@ -137,9 +143,9 @@ export function TripMapPage() {
         id: place.id,
         title: place.title,
         subtitle:
-          [place.category, place.city, place.country].filter(Boolean).join(' • ') ||
+          [place.category, place.city, place.country].filter(Boolean).join(' - ') ||
           place.address ||
-          'Saved place',
+          'Lugar salvo',
         category: place.category,
         country: place.country,
         city: place.city,
@@ -175,6 +181,7 @@ export function TripMapPage() {
         .filter((value): value is string => Boolean(value)),
     ),
   ].sort()
+
   const countries = [
     ...new Set(
       points
@@ -202,11 +209,11 @@ export function TripMapPage() {
     return (
       <Card>
         <CardContent className="space-y-3 p-8">
-          <p className="text-sm uppercase tracking-[0.3em] text-primary">Trip map</p>
-          <h1 className="font-serif text-4xl">Supabase connection required</h1>
+          <p className="text-sm uppercase tracking-[0.3em] text-primary">Mapa da viagem</p>
+          <h1 className="font-serif text-4xl">Conexao com Supabase obrigatoria</h1>
           <p className="max-w-2xl text-muted-foreground">
-            Configure the env values and run the migration and seed before using
-            the map.
+            Configure as variaveis de ambiente e execute as migrations antes de
+            usar o mapa.
           </p>
         </CardContent>
       </Card>
@@ -221,12 +228,12 @@ export function TripMapPage() {
     return (
       <Card>
         <CardContent className="space-y-3 p-8">
-          <p className="text-sm uppercase tracking-[0.3em] text-primary">Trip map</p>
-          <h1 className="font-serif text-4xl">Unable to load the map</h1>
+          <p className="text-sm uppercase tracking-[0.3em] text-primary">Mapa da viagem</p>
+          <h1 className="font-serif text-4xl">Nao foi possivel carregar o mapa</h1>
           <p className="max-w-2xl text-muted-foreground">
             {dashboardQuery.error instanceof Error
               ? dashboardQuery.error.message
-              : 'Trip map data could not be loaded.'}
+              : 'Os dados do mapa da viagem nao puderam ser carregados.'}
           </p>
         </CardContent>
       </Card>
@@ -237,11 +244,10 @@ export function TripMapPage() {
     return (
       <Card>
         <CardContent className="space-y-3 p-8">
-          <p className="text-sm uppercase tracking-[0.3em] text-primary">Trip map</p>
-          <h1 className="font-serif text-4xl">No mapped destinations yet</h1>
+          <p className="text-sm uppercase tracking-[0.3em] text-primary">Mapa da viagem</p>
+          <h1 className="font-serif text-4xl">Ainda nao existem destinos no mapa</h1>
           <p className="max-w-2xl text-muted-foreground">
-            Add destinations with coordinates and they will appear here with the
-            trip route line.
+            Adicione destinos com coordenadas para visualizar o roteiro no mapa.
           </p>
         </CardContent>
       </Card>
@@ -251,13 +257,13 @@ export function TripMapPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(140deg,rgba(15,118,110,0.95),rgba(23,60,83,0.92),rgba(240,139,111,0.78))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Trip map</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Mapa da viagem</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
           {dashboardQuery.data.summary.name}
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-white/80">
-          Straight-line route preview across your destinations. Open a maps app
-          for real turn-by-turn routing.
+          Visualize seus destinos, lugares salvos e deslocamentos em um unico
+          mapa da viagem.
         </p>
       </section>
 
@@ -266,13 +272,13 @@ export function TripMapPage() {
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap gap-3">
               <SelectFilter
-                label="Country"
+                label="Pais"
                 options={countries}
                 value={selectedCountry}
                 onChange={setSelectedCountry}
               />
               <SelectFilter
-                label="City"
+                label="Cidade"
                 options={cities}
                 value={selectedCity}
                 onChange={setSelectedCity}
@@ -287,7 +293,7 @@ export function TripMapPage() {
                 onClick={() => setIsFullscreen((current) => !current)}
               >
                 <Expand className="size-4" />
-                {isFullscreen ? 'Exit full screen' : 'Full screen'}
+                {isFullscreen ? 'Sair da tela cheia' : 'Tela cheia'}
               </Button>
             </div>
           </div>
@@ -300,10 +306,10 @@ export function TripMapPage() {
             <div className="rounded-[1.5rem] border bg-muted/40 p-4">
               <div className="flex items-center gap-2">
                 <Route className="size-4 text-primary" />
-                <p className="font-medium">Route summary</p>
+                <p className="font-medium">Resumo da rota</p>
               </div>
               <p className="mt-3 text-sm text-muted-foreground">
-                Approximate straight-line distance: {routeDistanceKm.toFixed(1)} km
+                Distancia aproximada em linha reta: {routeDistanceKm.toFixed(1)} km
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Distancia aproximada em linha reta. Abra no aplicativo de mapas
@@ -311,12 +317,13 @@ export function TripMapPage() {
               </p>
               {userLocation ? (
                 <p className="mt-3 text-sm text-primary">
-                  Current location captured: {userLocation.latitude.toFixed(4)},{' '}
+                  Localizacao atual capturada: {userLocation.latitude.toFixed(4)},{' '}
                   {userLocation.longitude.toFixed(4)}
                 </p>
               ) : (
                 <p className="mt-3 text-sm text-muted-foreground">
-                  Use "My location" to quickly orient yourself on the map.
+                  Use &quot;Minha localizacao&quot; para se orientar rapidamente no
+                  mapa.
                 </p>
               )}
             </div>
@@ -332,7 +339,7 @@ export function TripMapPage() {
                       {index + 1}. {point.title}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {[point.subtitle, point.dateLabel].filter(Boolean).join(' • ')}
+                      {[point.subtitle, point.dateLabel].filter(Boolean).join(' - ')}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -350,7 +357,7 @@ export function TripMapPage() {
                       }
                     >
                       <MapPinned className="size-4" />
-                      Navigate
+                      Navegar
                     </Button>
                     {userLocation ? (
                       <Button
@@ -367,7 +374,7 @@ export function TripMapPage() {
                         }
                       >
                         <LocateFixed className="size-4" />
-                        Next stop
+                        Proxima parada
                       </Button>
                     ) : null}
                   </div>
@@ -419,7 +426,7 @@ function SelectFilter({
         value={value}
         onChange={(event) => onChange(event.target.value)}
       >
-        <option value="all">All</option>
+        <option value="all">Todos</option>
         {options.map((option) => (
           <option key={option} value={option}>
             {option}

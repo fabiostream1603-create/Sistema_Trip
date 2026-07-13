@@ -1,17 +1,22 @@
 import { format } from 'date-fns'
 import { Ticket } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
 import { useTripLogistics } from '@/features/logistics/use-trip-logistics'
 import { formatMoney } from '@/lib/currency/money'
 import { hasSupabaseEnv } from '@/supabase/client'
-import { useParams } from 'react-router-dom'
 
 export function TripBookingsPage() {
   const { tripId = '' } = useParams()
   const logisticsQuery = useTripLogistics(tripId)
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before using bookings." />
+    return (
+      <StateCard
+        title="Conexao com Supabase obrigatoria"
+        body="Configure as variaveis do ambiente e rode as migrations antes de usar as reservas."
+      />
+    )
   }
 
   if (logisticsQuery.isLoading) {
@@ -21,11 +26,11 @@ export function TripBookingsPage() {
   if (logisticsQuery.isError || !logisticsQuery.data) {
     return (
       <StateCard
-        title="Unable to load bookings"
+        title="Nao foi possivel carregar as reservas"
         body={
           logisticsQuery.error instanceof Error
             ? logisticsQuery.error.message
-            : 'Trip booking data could not be loaded.'
+            : 'Os dados de reservas da viagem nao puderam ser carregados.'
         }
       />
     )
@@ -36,9 +41,9 @@ export function TripBookingsPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(140deg,rgba(15,118,110,0.95),rgba(23,60,83,0.92),rgba(240,139,111,0.78))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Bookings</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Reservas</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Reservations, confirmation codes, and payment status
+          Reservas, codigos de confirmacao e situacao de pagamento
         </h1>
       </section>
 
@@ -49,9 +54,9 @@ export function TripBookingsPage() {
               <Ticket className="size-5" />
             </div>
             <div>
-              <h2 className="font-serif text-2xl">Trip bookings</h2>
+              <h2 className="font-serif text-2xl">Reservas da viagem</h2>
               <p className="text-sm text-muted-foreground">
-                Flights, ferries, stays, and activity reservations.
+                Voos, ferry, hospedagens e atividades com confirmacao.
               </p>
             </div>
           </div>
@@ -64,17 +69,21 @@ export function TripBookingsPage() {
                   className="flex items-start justify-between rounded-[1.5rem] border px-4 py-4"
                 >
                   <div>
-                    <p className="font-medium">{booking.provider ?? 'Booking'} • {booking.type}</p>
+                    <p className="font-medium">
+                      {booking.provider ?? 'Reserva'} - {booking.type}
+                    </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {booking.confirmation_code ?? 'No confirmation code'} • {booking.status}
+                      {booking.confirmation_code ?? 'Sem codigo de confirmacao'} - {booking.status}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
                       {booking.start_at
-                        ? format(new Date(booking.start_at), "dd MMM yyyy 'at' HH:mm")
-                        : 'Date not defined'}
+                        ? format(new Date(booking.start_at), "dd MMM yyyy 'as' HH:mm")
+                        : 'Data nao definida'}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {[booking.origin, booking.destination].filter(Boolean).join(' -> ') || booking.address || 'Location not defined'}
+                      {[booking.origin, booking.destination].filter(Boolean).join(' -> ') ||
+                        booking.address ||
+                        'Local nao definido'}
                     </p>
                   </div>
                   <div className="text-right">
@@ -91,7 +100,7 @@ export function TripBookingsPage() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No bookings registered yet.</p>
+            <p className="text-sm text-muted-foreground">Nenhuma reserva cadastrada ainda.</p>
           )}
         </CardContent>
       </Card>
@@ -103,7 +112,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Bookings</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Reservas</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>

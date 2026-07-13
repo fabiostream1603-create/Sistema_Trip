@@ -1,11 +1,11 @@
 import { format } from 'date-fns'
 import { BusFront, Plane, ShipWheel, TrainFront } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useTripLogistics } from '@/features/logistics/use-trip-logistics'
 import { openExternalNavigation } from '@/lib/maps/navigation'
 import { hasSupabaseEnv } from '@/supabase/client'
-import { useParams } from 'react-router-dom'
 
 const iconByTransport = {
   bus: BusFront,
@@ -21,7 +21,12 @@ export function TripTransportsPage() {
   const logisticsQuery = useTripLogistics(tripId)
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before using transport." />
+    return (
+      <StateCard
+        title="Conexao com Supabase obrigatoria"
+        body="Configure as variaveis do ambiente e rode as migrations antes de usar os transportes."
+      />
+    )
   }
 
   if (logisticsQuery.isLoading) {
@@ -31,11 +36,11 @@ export function TripTransportsPage() {
   if (logisticsQuery.isError || !logisticsQuery.data) {
     return (
       <StateCard
-        title="Unable to load transport"
+        title="Nao foi possivel carregar os transportes"
         body={
           logisticsQuery.error instanceof Error
             ? logisticsQuery.error.message
-            : 'Transport data could not be loaded.'
+            : 'Os dados de transporte nao puderam ser carregados.'
         }
       />
     )
@@ -46,9 +51,9 @@ export function TripTransportsPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(140deg,rgba(15,118,110,0.95),rgba(23,60,83,0.92),rgba(240,139,111,0.78))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Transport</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Transportes</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Flights, ferries, transfers, and key movement details
+          Voos, ferry, traslados e detalhes principais dos deslocamentos
         </h1>
       </section>
 
@@ -71,19 +76,21 @@ export function TripTransportsPage() {
                         </div>
                         <div>
                           <p className="font-medium">
-                            {segment.company ?? 'Transport'} {segment.service_number ? `• ${segment.service_number}` : ''}
+                            {segment.company ?? 'Transporte'}
+                            {segment.service_number ? ` - ${segment.service_number}` : ''}
                           </p>
                           <p className="mt-1 text-sm text-muted-foreground">
                             {segment.origin_name} {'->'} {segment.destination_name}
                           </p>
                           <p className="mt-1 text-sm text-muted-foreground">
-                            {format(new Date(segment.departure_at), "dd MMM yyyy 'at' HH:mm")}
+                            {format(new Date(segment.departure_at), "dd MMM yyyy 'as' HH:mm")}
                             {segment.arrival_at
                               ? ` - ${format(new Date(segment.arrival_at), 'HH:mm')}`
                               : ''}
                           </p>
                           <p className="mt-1 text-sm text-muted-foreground">
-                            {[segment.terminal, segment.gate, segment.seat].filter(Boolean).join(' • ') || 'No terminal/gate/seat info yet'}
+                            {[segment.terminal, segment.gate, segment.seat].filter(Boolean).join(' - ') ||
+                              'Sem informacoes de terminal, portao ou assento'}
                           </p>
                         </div>
                       </div>
@@ -102,7 +109,7 @@ export function TripTransportsPage() {
                               })
                             }
                           >
-                            Navigate
+                            Navegar
                           </Button>
                         ) : null}
                       </div>
@@ -112,7 +119,7 @@ export function TripTransportsPage() {
               })}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No transport segments registered yet.</p>
+            <p className="text-sm text-muted-foreground">Nenhum trecho de transporte cadastrado ainda.</p>
           )}
         </CardContent>
       </Card>
@@ -124,7 +131,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Transport</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Transportes</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>

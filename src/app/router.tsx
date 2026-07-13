@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
       <ProtectedRoute>
         <PlaceholderPage
           title="Onboarding"
-          description="Prepare your first trip, travelers, and preferences."
+          description="Prepare sua primeira viagem, viajantes e preferencias."
         />
       </ProtectedRoute>
     ),

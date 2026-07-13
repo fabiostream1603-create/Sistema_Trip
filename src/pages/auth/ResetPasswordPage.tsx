@@ -9,16 +9,16 @@ export function ResetPasswordPage() {
         <CardContent className="space-y-5 p-8">
           <div className="space-y-2">
             <p className="text-sm uppercase tracking-[0.3em] text-primary">
-              New password
+              Nova senha
             </p>
-            <h1 className="font-serif text-4xl">Supabase recovery callback</h1>
+            <h1 className="font-serif text-4xl">Retorno de recuperacao do Supabase</h1>
             <p className="text-sm text-muted-foreground">
-              This route is wired for the recovery session link. The actual form
-              can be added as soon as the email reset workflow is enabled.
+              Esta rota ja recebe o link de recuperacao. O formulario final de
+              troca de senha pode ser ligado assim que esse fluxo for habilitado.
             </p>
           </div>
           <Button asChild>
-            <Link to="/login">Return to login</Link>
+            <Link to="/login">Voltar para o login</Link>
           </Button>
         </CardContent>
       </Card>

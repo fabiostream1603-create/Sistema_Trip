@@ -9,16 +9,16 @@ export function ForgotPasswordPage() {
         <CardContent className="space-y-5 p-8">
           <div className="space-y-2">
             <p className="text-sm uppercase tracking-[0.3em] text-primary">
-              Password reset
+              Recuperacao de senha
             </p>
-            <h1 className="font-serif text-4xl">Reset flow placeholder</h1>
+            <h1 className="font-serif text-4xl">Fluxo de recuperacao em preparacao</h1>
             <p className="text-sm text-muted-foreground">
-              Phase 1 prepares the route and guardrails. Hook the actual email
-              reset flow once Supabase Auth email templates are configured.
+              A rota ja esta pronta no app. O envio real de e-mail pode ser ligado
+              assim que os templates do Supabase Auth forem configurados.
             </p>
           </div>
           <Button asChild>
-            <Link to="/login">Back to login</Link>
+            <Link to="/login">Voltar para o login</Link>
           </Button>
         </CardContent>
       </Card>

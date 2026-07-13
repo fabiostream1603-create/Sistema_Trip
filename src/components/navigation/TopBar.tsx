@@ -26,7 +26,7 @@ export function TopBar() {
           <div>
             <p className="font-serif text-lg leading-none">Voyage Hub</p>
             <p className="text-xs text-muted-foreground">
-              Mediterranean planning, one calm place
+              Planejamento de viagem em um so lugar
             </p>
           </div>
         </Link>
@@ -44,7 +44,7 @@ export function TopBar() {
             ) : (
               <MoonStar className="size-5" />
             )}
-            <span className="sr-only">Toggle theme</span>
+            <span className="sr-only">Alternar tema</span>
           </Button>
           <Avatar>
             <AvatarFallback>
@@ -53,7 +53,7 @@ export function TopBar() {
           </Avatar>
           <Button variant="ghost" size="icon" onClick={handleLogout}>
             <LogOut className="size-5" />
-            <span className="sr-only">Sign out</span>
+            <span className="sr-only">Sair</span>
           </Button>
         </div>
       </div>

@@ -15,6 +15,6 @@ vi.mock('@/features/offline/use-pwa-updater', () => ({
 describe('OfflineBanner', () => {
   it('renders offline message when network is unavailable', () => {
     render(<OfflineBanner />)
-    expect(screen.getByText(/You are offline/i)).toBeInTheDocument()
+    expect(screen.getByText(/Voce esta offline/i)).toBeInTheDocument()
   })
 })

@@ -1,11 +1,11 @@
 import { CheckCircle2, Circle } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Card, CardContent } from '@/components/ui/card'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useToggleChecklistItem } from '@/features/checklists/use-toggle-checklist-item'
 import { useTripChecklists } from '@/features/checklists/use-trip-checklists'
 import { hasSupabaseEnv } from '@/supabase/client'
-import { useParams } from 'react-router-dom'
 
 export function TripChecklistsPage() {
   const { tripId = '' } = useParams()
@@ -25,12 +25,17 @@ export function TripChecklistsPage() {
     })
 
     if (result.queued) {
-      toast.success('Checklist change queued offline. It will sync when you are back online.')
+      toast.success('Alteracao salva offline. A sincronizacao acontece quando a conexao voltar.')
     }
   }
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before using checklists." />
+    return (
+      <StateCard
+        title="Conexao com Supabase obrigatoria"
+        body="Configure as variaveis do ambiente e rode as migrations antes de usar as checklists."
+      />
+    )
   }
 
   if (checklistsQuery.isLoading) {
@@ -40,11 +45,11 @@ export function TripChecklistsPage() {
   if (checklistsQuery.isError || !checklistsQuery.data) {
     return (
       <StateCard
-        title="Unable to load checklists"
+        title="Nao foi possivel carregar as checklists"
         body={
           checklistsQuery.error instanceof Error
             ? checklistsQuery.error.message
-            : 'Checklist data could not be loaded.'
+            : 'Os dados das checklists nao puderam ser carregados.'
         }
       />
     )
@@ -55,7 +60,7 @@ export function TripChecklistsPage() {
       <section className="rounded-[2rem] border bg-[linear-gradient(140deg,rgba(15,118,110,0.95),rgba(23,60,83,0.92),rgba(240,139,111,0.78))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
         <p className="text-sm uppercase tracking-[0.35em] text-white/75">Checklists</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Packing, admin tasks, and shared trip prep
+          Mala, tarefas administrativas e preparacao compartilhada
         </h1>
       </section>
 
@@ -71,11 +76,11 @@ export function TripChecklistsPage() {
                     </p>
                     <h2 className="mt-1 font-serif text-2xl">{entry.checklist.title}</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {entry.checklist.traveler_name ?? 'Shared checklist'}
+                      {entry.checklist.traveler_name ?? 'Checklist compartilhada'}
                     </p>
                   </div>
                   <div className="rounded-full bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground">
-                    {entry.progress}% complete
+                    {entry.progress}% concluido
                   </div>
                 </div>
 
@@ -104,10 +109,10 @@ export function TripChecklistsPage() {
                       <div>
                         <p className="font-medium">{item.title}</p>
                         <p className="mt-1 text-sm text-muted-foreground">
-                          {item.description ?? 'No extra notes'}
+                          {item.description ?? 'Sem observacoes extras'}
                         </p>
                         <p className="mt-1 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                          {item.priority} priority • qty {item.quantity}
+                          prioridade {item.priority} - qtd {item.quantity}
                         </p>
                       </div>
                     </button>
@@ -119,9 +124,9 @@ export function TripChecklistsPage() {
         ) : (
           <Card>
             <CardContent className="space-y-3 p-8">
-              <h2 className="font-serif text-3xl">No checklists yet</h2>
+              <h2 className="font-serif text-3xl">Nenhuma checklist cadastrada ainda</h2>
               <p className="text-sm text-muted-foreground">
-                Add checklist rows in Supabase or keep using the development seed to see them here.
+                Adicione as checklists no Supabase ou siga usando a seed de desenvolvimento para visualizar exemplos aqui.
               </p>
             </CardContent>
           </Card>

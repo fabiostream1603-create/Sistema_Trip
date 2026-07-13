@@ -11,7 +11,7 @@ export function PlaceholderPage({
     <Card>
       <CardContent className="space-y-3 p-8">
         <p className="text-sm uppercase tracking-[0.3em] text-primary">
-          Phase 1 foundation
+          Base inicial
         </p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{description}</p>

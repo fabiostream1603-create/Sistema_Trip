@@ -67,38 +67,38 @@ export function PlaceForm({
   return (
     <form className="grid gap-5 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
       <Field>
-        <Label htmlFor="title">Place name</Label>
+        <Label htmlFor="title">Nome do lugar</Label>
         <Input id="title" {...form.register('title')} />
         <ErrorText message={form.formState.errors.title?.message} />
       </Field>
 
       <Field>
-        <Label htmlFor="category">Category</Label>
+        <Label htmlFor="category">Categoria</Label>
         <select
           className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
           id="category"
           {...form.register('category')}
         >
-          <option value="attraction">Attraction</option>
-          <option value="restaurant">Restaurant</option>
-          <option value="beach">Beach</option>
-          <option value="viewpoint">Viewpoint</option>
-          <option value="activity">Activity</option>
+          <option value="attraction">Atracao</option>
+          <option value="restaurant">Restaurante</option>
+          <option value="beach">Praia</option>
+          <option value="viewpoint">Mirante</option>
+          <option value="activity">Atividade</option>
           <option value="shopping">Shopping</option>
-          <option value="pharmacy">Pharmacy</option>
+          <option value="pharmacy">Farmacia</option>
           <option value="hospital">Hospital</option>
-          <option value="other">Other</option>
+          <option value="other">Outro</option>
         </select>
       </Field>
 
       <Field>
-        <Label htmlFor="destination_id">Destination</Label>
+        <Label htmlFor="destination_id">Destino</Label>
         <select
           className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
           id="destination_id"
           {...form.register('destination_id')}
         >
-          <option value="">No linked destination</option>
+          <option value="">Sem destino vinculado</option>
           {destinations.map((destination) => (
             <option key={destination.id} value={destination.id}>
               {destination.city}, {destination.country}
@@ -114,10 +114,10 @@ export function PlaceForm({
           id="visit_status"
           {...form.register('visit_status')}
         >
-          <option value="saved">Saved</option>
-          <option value="must_visit">Must visit</option>
-          <option value="visited">Visited</option>
-          <option value="skipped">Skipped</option>
+          <option value="saved">Salvo</option>
+          <option value="must_visit">Imperdivel</option>
+          <option value="visited">Visitado</option>
+          <option value="skipped">Ignorado</option>
         </select>
       </Field>
 
@@ -134,41 +134,41 @@ export function PlaceForm({
       </Field>
 
       <Field>
-        <Label htmlFor="city">City</Label>
+        <Label htmlFor="city">Cidade</Label>
         <Input id="city" {...form.register('city')} />
       </Field>
 
       <Field>
-        <Label htmlFor="country">Country</Label>
+        <Label htmlFor="country">Pais</Label>
         <Input id="country" {...form.register('country')} />
       </Field>
 
       <div className="md:col-span-2">
         <Field>
-          <Label htmlFor="address">Address</Label>
+          <Label htmlFor="address">Endereco</Label>
           <Input id="address" {...form.register('address')} />
         </Field>
       </div>
 
       <Field>
-        <Label htmlFor="website_url">Website</Label>
-        <Input id="website_url" placeholder="https://example.com" {...form.register('website_url')} />
+        <Label htmlFor="website_url">Site</Label>
+        <Input id="website_url" placeholder="https://exemplo.com" {...form.register('website_url')} />
         <ErrorText message={form.formState.errors.website_url?.message} />
       </Field>
 
       <Field>
-        <Label htmlFor="phone">Phone</Label>
+        <Label htmlFor="phone">Telefone</Label>
         <Input id="phone" {...form.register('phone')} />
       </Field>
 
       <Field>
-        <Label htmlFor="price_level">Price level</Label>
+        <Label htmlFor="price_level">Faixa de preco</Label>
         <select
           className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
           id="price_level"
           {...form.register('price_level')}
         >
-          <option value="">Not set</option>
+          <option value="">Nao definido</option>
           <option value="1">$</option>
           <option value="2">$$</option>
           <option value="3">$$$</option>
@@ -179,12 +179,12 @@ export function PlaceForm({
 
       <label className="flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm">
         <input type="checkbox" {...form.register('is_favorite')} />
-        <span>Mark as favorite</span>
+        <span>Marcar como favorito</span>
       </label>
 
       <div className="md:col-span-2">
         <Field>
-          <Label htmlFor="notes">Notes</Label>
+          <Label htmlFor="notes">Observacoes</Label>
           <textarea
             className="min-h-28 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none"
             id="notes"
@@ -196,11 +196,11 @@ export function PlaceForm({
       <div className="md:col-span-2 flex justify-end gap-3">
         {onCancel ? (
           <Button type="button" variant="outline" onClick={onCancel}>
-            Cancel
+            Cancelar
           </Button>
         ) : null}
         <Button disabled={isPending} type="submit">
-          {place ? 'Save changes' : 'Save place'}
+          {place ? 'Salvar alteracoes' : 'Salvar lugar'}
         </Button>
       </div>
     </form>

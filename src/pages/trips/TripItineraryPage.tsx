@@ -57,7 +57,7 @@ export function TripItineraryPage() {
   }
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before using the itinerary." />
+    return <StateCard title="Conexao com Supabase obrigatoria" body="Configure as variaveis do ambiente e rode as migrations antes de usar o roteiro." />
   }
 
   if (itineraryQuery.isLoading) {
@@ -67,11 +67,11 @@ export function TripItineraryPage() {
   if (itineraryQuery.isError || !itineraryQuery.data) {
     return (
       <StateCard
-        title="Unable to load itinerary"
+        title="Nao foi possivel carregar o roteiro"
         body={
           itineraryQuery.error instanceof Error
             ? itineraryQuery.error.message
-            : 'Trip itinerary data could not be loaded.'
+            : 'Os dados do roteiro nao puderam ser carregados.'
         }
       />
     )
@@ -82,8 +82,8 @@ export function TripItineraryPage() {
   if (days.length === 0) {
     return (
       <StateCard
-        title="No itinerary days yet"
-        body="Add itinerary days and activities in Supabase to populate the timeline, daily list, and next-destination widgets."
+        title="Nenhum dia de roteiro cadastrado ainda"
+        body="Crie dias e atividades para montar a linha do tempo, a lista diaria e os proximos compromissos."
       />
     )
   }
@@ -91,12 +91,12 @@ export function TripItineraryPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(140deg,rgba(15,118,110,0.95),rgba(23,60,83,0.92),rgba(240,139,111,0.78))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Itinerary</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Roteiro</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Timeline, day list, and map coordination in one flow
+          Linha do tempo, plano diario e mapa em um so fluxo
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-white/80">
-          Phase 4 connects itinerary days and activities to the trip, so you can jump from plan to map without losing context.
+          Organize os dias da viagem e as atividades de cada parada sem perder o contexto do mapa.
         </p>
       </section>
 
@@ -170,9 +170,9 @@ export function TripItineraryPage() {
                 <Route className="size-5" />
               </div>
               <div>
-                <h2 className="font-serif text-2xl">Next activity</h2>
+                <h2 className="font-serif text-2xl">Proxima atividade</h2>
                 <p className="text-sm text-muted-foreground">
-                  Fast access to what comes next on the trip.
+                  Acesso rapido ao que vem a seguir na viagem.
                 </p>
               </div>
             </div>
@@ -190,20 +190,20 @@ export function TripItineraryPage() {
                 <div className="flex flex-wrap gap-2">
                   <Button asChild size="sm">
                     <Link to={`/trips/${tripId}/itinerary/${format(new Date(nextItem.start_at), 'yyyy-MM-dd')}`}>
-                      Open day plan
+                      Abrir dia
                     </Link>
                   </Button>
                   <Button asChild size="sm" variant="outline">
                     <Link to={`/trips/${tripId}/map`}>
                       <MapPinned className="size-4" />
-                      Open map
+                      Abrir mapa
                     </Link>
                   </Button>
                 </div>
               </>
             ) : (
               <p className="text-sm text-muted-foreground">
-                No future activities scheduled yet.
+                Nenhuma atividade futura programada ainda.
               </p>
             )}
           </CardContent>
@@ -216,9 +216,9 @@ export function TripItineraryPage() {
                 <CalendarRange className="size-5" />
               </div>
               <div>
-                <h2 className="font-serif text-2xl">Daily timeline</h2>
+                <h2 className="font-serif text-2xl">Linha do tempo diaria</h2>
                 <p className="text-sm text-muted-foreground">
-                  A day-by-day itinerary view with schedule density and destination context.
+                  Uma visao dia a dia do roteiro com horarios e contexto do destino.
                 </p>
               </div>
             </div>
@@ -236,11 +236,11 @@ export function TripItineraryPage() {
                         {format(new Date(day.date), 'EEEE, dd MMM yyyy')}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {[day.destination_city, day.destination_country].filter(Boolean).join(', ') || 'Destination not linked'}
+                        {[day.destination_city, day.destination_country].filter(Boolean).join(', ') || 'Destino nao vinculado'}
                       </p>
                     </div>
                     <div className="text-right text-sm text-muted-foreground">
-                      <p>{day.items_count} items</p>
+                      <p>{day.items_count} atividades</p>
                       <p>
                         {day.first_start_at
                           ? format(new Date(day.first_start_at), 'HH:mm')
@@ -270,7 +270,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Itinerary</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Roteiro</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>

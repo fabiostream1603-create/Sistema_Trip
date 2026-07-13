@@ -115,7 +115,7 @@ export function TripDayItineraryPage() {
   }
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before using daily itinerary pages." />
+    return <StateCard title="Conexao com Supabase obrigatoria" body="Configure as variaveis do ambiente e rode as migrations antes de usar o roteiro diario." />
   }
 
   if (dayQuery.isLoading) {
@@ -125,11 +125,11 @@ export function TripDayItineraryPage() {
   if (dayQuery.isError || !dayQuery.data) {
     return (
       <StateCard
-        title="Unable to load day plan"
+        title="Nao foi possivel carregar o plano do dia"
         body={
           dayQuery.error instanceof Error
             ? dayQuery.error.message
-            : 'The selected itinerary day could not be loaded.'
+            : 'O dia selecionado do roteiro nao pode ser carregado.'
         }
       />
     )
@@ -147,13 +147,13 @@ export function TripDayItineraryPage() {
           <Button asChild size="sm" variant="ghost">
             <Link to={`/trips/${tripId}/itinerary`}>
               <ArrowLeft className="size-4" />
-              Back to itinerary
+              Voltar para o roteiro
             </Link>
           </Button>
           <Button asChild size="sm" variant="outline">
             <Link to={`/trips/${tripId}/map`}>
               <MapPinned className="size-4" />
-              Open map
+              Abrir mapa
             </Link>
           </Button>
           {nextNavigableItem ? (
@@ -176,14 +176,14 @@ export function TripDayItineraryPage() {
 
         <div className="mt-6">
           <p className="text-sm uppercase tracking-[0.3em] text-primary">
-            Day plan
+            Plano do dia
           </p>
           <h1 className="mt-3 font-serif text-4xl">{day.title}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             {format(new Date(day.date), 'EEEE, dd MMM yyyy')}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            {[day.destination_city, day.destination_country].filter(Boolean).join(', ') || 'Destination not linked'}
+            {[day.destination_city, day.destination_country].filter(Boolean).join(', ') || 'Destino nao vinculado'}
           </p>
           {day.notes ? (
             <p className="mt-4 max-w-3xl text-sm text-muted-foreground">{day.notes}</p>
@@ -290,8 +290,8 @@ export function TripDayItineraryPage() {
           </div>
 
           <div className="flex items-center justify-between">
-            <h2 className="font-serif text-2xl">Activities</h2>
-            <p className="text-sm text-muted-foreground">{items.length} planned stops</p>
+            <h2 className="font-serif text-2xl">Atividades</h2>
+            <p className="text-sm text-muted-foreground">{items.length} paradas planejadas</p>
           </div>
           {items.length > 0 ? (
             <div className="space-y-4">
@@ -300,7 +300,7 @@ export function TripDayItineraryPage() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No activities scheduled for this day yet.</p>
+            <p className="text-sm text-muted-foreground">Nenhuma atividade cadastrada para este dia ainda.</p>
           )}
         </CardContent>
       </Card>
@@ -320,7 +320,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Day plan</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Plano do dia</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>

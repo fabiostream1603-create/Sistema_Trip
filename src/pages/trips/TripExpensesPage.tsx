@@ -11,21 +11,31 @@ export function TripExpensesPage() {
   const expensesQuery = useTripExpenses(tripId)
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Supabase connection required" body="Configure the env values and run the migrations before using expenses." />
+    return (
+      <StateCard
+        title="Conexao com Supabase obrigatoria"
+        body="Configure as variaveis do ambiente e rode as migrations antes de usar os gastos."
+      />
+    )
   }
 
   if (expensesQuery.isLoading) {
-    return <div className="grid gap-4"><div className="h-48 animate-pulse rounded-[2rem] border bg-muted/50" /><div className="h-40 animate-pulse rounded-[2rem] border bg-muted/50" /></div>
+    return (
+      <div className="grid gap-4">
+        <div className="h-48 animate-pulse rounded-[2rem] border bg-muted/50" />
+        <div className="h-40 animate-pulse rounded-[2rem] border bg-muted/50" />
+      </div>
+    )
   }
 
   if (expensesQuery.isError || !expensesQuery.data) {
     return (
       <StateCard
-        title="Unable to load expenses"
+        title="Nao foi possivel carregar os gastos"
         body={
           expensesQuery.error instanceof Error
             ? expensesQuery.error.message
-            : 'Trip finance data could not be loaded.'
+            : 'Os dados financeiros da viagem nao puderam ser carregados.'
         }
       />
     )
@@ -36,32 +46,32 @@ export function TripExpensesPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border bg-[linear-gradient(140deg,rgba(15,118,110,0.95),rgba(23,60,83,0.92),rgba(240,139,111,0.78))] px-6 py-8 text-white shadow-[var(--shadow-card)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Expenses</p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/75">Gastos</p>
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
-          Shared budget, actual spend, and balances between travelers
+          Orcamento compartilhado, gastos reais e saldos entre viajantes
         </h1>
         <div className="mt-5">
           <Button asChild variant="secondary">
-            <Link to={`/trips/${tripId}/expenses/new`}>New expense</Link>
+            <Link to={`/trips/${tripId}/expenses/new`}>Novo gasto</Link>
           </Button>
         </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
-          label="Total spent"
+          label="Total gasto"
           value={summary ? formatMoney(summary.total_spent, summary.base_currency) : '--'}
         />
         <SummaryCard
-          label="Planned"
+          label="Planejado"
           value={summary ? formatMoney(summary.total_planned, summary.base_currency) : '--'}
         />
         <SummaryCard
-          label="Paid"
+          label="Pago"
           value={summary ? formatMoney(summary.total_paid, summary.base_currency) : '--'}
         />
         <SummaryCard
-          label="Remaining"
+          label="Restante"
           value={summary ? formatMoney(summary.budget_remaining, summary.base_currency) : '--'}
         />
       </section>
@@ -75,9 +85,9 @@ export function TripExpensesPage() {
                   <Receipt className="size-5" />
                 </div>
                 <div>
-                  <h2 className="font-serif text-2xl">Expense log</h2>
+                  <h2 className="font-serif text-2xl">Lancamentos</h2>
                   <p className="text-sm text-muted-foreground">
-                    Real and planned costs in base currency.
+                    Custos reais e previstos na moeda base da viagem.
                   </p>
                 </div>
               </div>
@@ -93,12 +103,12 @@ export function TripExpensesPage() {
                     <div>
                       <p className="font-medium">{expense.title}</p>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {expense.category_name} • {expense.paid_by_name} • {expense.expense_date}
+                        {expense.category_name} - {expense.paid_by_name} - {expense.expense_date}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">
                         {expense.city && expense.country
                           ? `${expense.city}, ${expense.country}`
-                          : expense.country ?? 'Location not set'}
+                          : expense.country ?? 'Local nao definido'}
                       </p>
                     </div>
                     <div className="text-right">
@@ -113,7 +123,7 @@ export function TripExpensesPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No expenses logged yet.</p>
+              <p className="text-sm text-muted-foreground">Nenhum gasto lancado ainda.</p>
             )}
           </CardContent>
         </Card>
@@ -125,9 +135,9 @@ export function TripExpensesPage() {
                 <Wallet className="size-5" />
               </div>
               <div>
-                <h2 className="font-serif text-2xl">Traveler balances</h2>
+                <h2 className="font-serif text-2xl">Saldos dos viajantes</h2>
                 <p className="text-sm text-muted-foreground">
-                  Positive means the traveler fronted more than their own share.
+                  Valor positivo significa que a pessoa adiantou mais do que a propria parte.
                 </p>
               </div>
             </div>
@@ -147,7 +157,7 @@ export function TripExpensesPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No balances available yet.</p>
+              <p className="text-sm text-muted-foreground">Nenhum saldo disponivel ainda.</p>
             )}
           </CardContent>
         </Card>
@@ -171,7 +181,7 @@ function StateCard({ body, title }: { body: string; title: string }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-primary">Expenses</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-primary">Gastos</p>
         <h1 className="font-serif text-4xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{body}</p>
       </CardContent>
