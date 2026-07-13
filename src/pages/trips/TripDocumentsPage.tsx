@@ -1,4 +1,5 @@
 import { FileText, ShieldCheck, Star, Trash2 } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { DocumentUploader } from '@/components/documents/DocumentUploader'
 import { Button } from '@/components/ui/button'
@@ -7,7 +8,6 @@ import { useDeleteDocument } from '@/features/documents/use-delete-document'
 import { useTripDocuments } from '@/features/documents/use-trip-documents'
 import { isImageMimeType, isPdfMimeType } from '@/lib/documents/files'
 import { hasSupabaseEnv } from '@/supabase/client'
-import { useParams } from 'react-router-dom'
 
 export function TripDocumentsPage() {
   const { tripId = '' } = useParams()
@@ -25,7 +25,12 @@ export function TripDocumentsPage() {
   }
 
   if (!hasSupabaseEnv) {
-    return <StateCard title="Conexao com Supabase obrigatoria" body="Configure as variaveis do ambiente e rode as migrations antes de usar os documentos." />
+    return (
+      <StateCard
+        title="Conexao com Supabase obrigatoria"
+        body="Configure as variaveis do ambiente e rode as migrations antes de usar os documentos."
+      />
+    )
   }
 
   return (
@@ -36,7 +41,8 @@ export function TripDocumentsPage() {
           Documentos privados da viagem com links temporarios
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-white/80">
-          Os arquivos ficam em um bucket privado do Supabase e so sao expostos por URLs assinadas temporarias.
+          Os arquivos ficam em um bucket privado do Supabase e so aparecem para
+          os membros autorizados da viagem.
         </p>
       </section>
 
@@ -66,7 +72,7 @@ export function TripDocumentsPage() {
             <div>
               <h2 className="font-serif text-2xl">Central de documentos</h2>
               <p className="text-sm text-muted-foreground">
-                Visualizacoes e downloads temporarios apenas para membros da viagem.
+                Visualizacao e download temporario apenas para membros da viagem.
               </p>
             </div>
           </div>
@@ -82,10 +88,7 @@ export function TripDocumentsPage() {
           ) : documentsQuery.data && documentsQuery.data.length > 0 ? (
             <div className="grid gap-4 lg:grid-cols-2">
               {documentsQuery.data.map((document) => (
-                <div
-                  key={document.id}
-                  className="rounded-[1.5rem] border bg-background p-4"
-                >
+                <div key={document.id} className="rounded-[1.5rem] border bg-background p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-2">
@@ -95,7 +98,11 @@ export function TripDocumentsPage() {
                         ) : null}
                       </div>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {document.category} • {document.traveler_name ?? 'No traveler'}
+                        {formatDocumentCategory(document.category)} -{' '}
+                        {document.traveler_name ?? 'Sem viajante vinculado'}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Arquivo original: {document.original_filename}
                       </p>
                     </div>
                     <Button
@@ -182,4 +189,25 @@ function StateCard({ body, title }: { body: string; title: string }) {
       </CardContent>
     </Card>
   )
+}
+
+function formatDocumentCategory(category: string) {
+  switch (category) {
+    case 'passport':
+      return 'Passaporte'
+    case 'ticket':
+      return 'Ingresso'
+    case 'booking':
+      return 'Reserva'
+    case 'insurance':
+      return 'Seguro'
+    case 'receipt':
+      return 'Comprovante'
+    case 'identity':
+      return 'Identidade'
+    case 'health':
+      return 'Saude'
+    default:
+      return 'Outro'
+  }
 }

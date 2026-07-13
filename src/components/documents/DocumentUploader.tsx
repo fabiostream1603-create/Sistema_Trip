@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
-import { Upload } from 'lucide-react'
+import { FileBadge2, Paperclip, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -46,103 +46,168 @@ export function DocumentUploader({ tripId }: { tripId: string }) {
       return
     }
 
-    await uploadDocument.mutateAsync({
-      ...values,
-      file,
-      trip_id: tripId,
-      uploaded_by: session.user.id,
-      onProgress: setProgress,
-      traveler_id: values.traveler_id || undefined,
-    })
+    try {
+      await uploadDocument.mutateAsync({
+        ...values,
+        file,
+        trip_id: tripId,
+        uploaded_by: session.user.id,
+        onProgress: setProgress,
+        traveler_id: values.traveler_id || undefined,
+      })
 
-    toast.success('Documento enviado com seguranca.')
-    setFile(null)
-    setProgress(0)
-    form.reset()
+      toast.success('Documento enviado com seguranca.')
+      setFile(null)
+      setProgress(0)
+      form.reset()
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Nao foi possivel enviar o documento agora.',
+      )
+    }
+  }
+
+  if (supportQuery.isLoading) {
+    return <div className="h-56 animate-pulse rounded-[2rem] border bg-muted/50" />
+  }
+
+  if (supportQuery.isError) {
+    return (
+      <div className="rounded-[1.5rem] border border-dashed bg-muted/20 p-5">
+        <p className="font-medium">Nao foi possivel preparar o upload</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {supportQuery.error instanceof Error
+            ? supportQuery.error.message
+            : 'Os dados de apoio para upload nao puderam ser carregados.'}
+        </p>
+      </div>
+    )
   }
 
   return (
     <form className="grid gap-4 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
-      <Field>
-        <Label htmlFor="title">Titulo</Label>
-        <Input id="title" {...form.register('title')} />
-        <ErrorText message={form.formState.errors.title?.message} />
-      </Field>
+      <div className="rounded-[1.5rem] border bg-muted/20 p-4 md:col-span-2">
+        <div className="mb-4 flex items-center gap-3">
+          <div className="rounded-full bg-primary/10 p-2 text-primary">
+            <Paperclip className="size-5" />
+          </div>
+          <div>
+            <h3 className="font-serif text-2xl">Dados do documento</h3>
+            <p className="text-sm text-muted-foreground">
+              Relacione o arquivo ao viajante correto e classifique o tipo de documento.
+            </p>
+          </div>
+        </div>
 
-      <Field>
-        <Label htmlFor="category">Categoria</Label>
-        <select
-          className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
-          id="category"
-          {...form.register('category')}
-        >
-          <option value="passport">Passaporte</option>
-          <option value="ticket">Ingresso</option>
-          <option value="booking">Reserva</option>
-          <option value="insurance">Seguro</option>
-          <option value="receipt">Comprovante</option>
-          <option value="identity">Identidade</option>
-          <option value="health">Saude</option>
-          <option value="other">Outro</option>
-        </select>
-      </Field>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field>
+            <Label htmlFor="title">Titulo</Label>
+            <Input id="title" placeholder="Ex.: Voucher Airbnb Roma" {...form.register('title')} />
+            <ErrorText message={form.formState.errors.title?.message} />
+          </Field>
 
-      <Field>
-        <Label htmlFor="traveler_id">Viajante</Label>
-        <select
-          className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
-          id="traveler_id"
-          {...form.register('traveler_id')}
-        >
-          <option value="">Sem vinculo com viajante</option>
-          {(supportQuery.data?.travelers ?? []).map((traveler) => (
-            <option key={traveler.id} value={traveler.id}>
-              {traveler.name}
-            </option>
-          ))}
-        </select>
-      </Field>
+          <Field>
+            <Label htmlFor="category">Categoria</Label>
+            <select
+              className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
+              id="category"
+              {...form.register('category')}
+            >
+              <option value="passport">Passaporte</option>
+              <option value="ticket">Ingresso</option>
+              <option value="booking">Reserva</option>
+              <option value="insurance">Seguro</option>
+              <option value="receipt">Comprovante</option>
+              <option value="identity">Identidade</option>
+              <option value="health">Saude</option>
+              <option value="other">Outro</option>
+            </select>
+          </Field>
 
-      <Field>
-        <Label htmlFor="file">Arquivo</Label>
-        <Input
-          id="file"
-          type="file"
-          accept="application/pdf,image/jpeg,image/png,image/webp"
-          onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-        />
-      </Field>
+          <Field>
+            <Label htmlFor="traveler_id">Viajante</Label>
+            <select
+              className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
+              id="traveler_id"
+              {...form.register('traveler_id')}
+            >
+              <option value="">Sem vinculo com viajante</option>
+              {(supportQuery.data?.travelers ?? []).map((traveler) => (
+                <option key={traveler.id} value={traveler.id}>
+                  {traveler.name}
+                </option>
+              ))}
+            </select>
+          </Field>
 
-      <Field>
-        <Label htmlFor="issue_date">Data de emissao</Label>
-        <Input id="issue_date" type="date" {...form.register('issue_date')} />
-      </Field>
+          <Field>
+            <Label htmlFor="file">Arquivo</Label>
+            <Input
+              id="file"
+              type="file"
+              accept="application/pdf,image/jpeg,image/png,image/webp"
+              onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+            />
+          </Field>
 
-      <Field>
-        <Label htmlFor="expiration_date">Data de validade</Label>
-        <Input id="expiration_date" type="date" {...form.register('expiration_date')} />
-      </Field>
+          <Field>
+            <Label htmlFor="issue_date">Data de emissao</Label>
+            <Input id="issue_date" type="date" {...form.register('issue_date')} />
+          </Field>
 
-      <div className="md:col-span-2 space-y-2">
-        <Label htmlFor="description">Descricao</Label>
-        <textarea
-          className="min-h-24 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none"
-          id="description"
-          {...form.register('description')}
-        />
+          <Field>
+            <Label htmlFor="expiration_date">Data de validade</Label>
+            <Input id="expiration_date" type="date" {...form.register('expiration_date')} />
+          </Field>
+
+          <div className="md:col-span-2 space-y-2">
+            <Label htmlFor="description">Descricao</Label>
+            <textarea
+              className="min-h-24 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none"
+              id="description"
+              {...form.register('description')}
+            />
+          </div>
+
+          <label className="flex items-center gap-2 rounded-2xl border px-4 py-3 text-sm">
+            <input type="checkbox" {...form.register('is_favorite')} />
+            Favorito
+          </label>
+
+          <label className="flex items-center gap-2 rounded-2xl border px-4 py-3 text-sm">
+            <input type="checkbox" {...form.register('offline_priority')} />
+            Preparar para acesso offline
+          </label>
+        </div>
       </div>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" {...form.register('is_favorite')} />
-        Favorito
-      </label>
+      <div className="rounded-[1.5rem] border bg-background p-4 md:col-span-2">
+        <div className="mb-4 flex items-center gap-3">
+          <div className="rounded-full bg-primary/10 p-2 text-primary">
+            <FileBadge2 className="size-5" />
+          </div>
+          <div>
+            <h3 className="font-serif text-2xl">Arquivo selecionado</h3>
+            <p className="text-sm text-muted-foreground">
+              PDFs e imagens em JPG, PNG ou WebP, com ate 10 MB.
+            </p>
+          </div>
+        </div>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" {...form.register('offline_priority')} />
-        Preparar para acesso offline
-      </label>
+        <div className="rounded-[1.25rem] border bg-muted/20 px-4 py-3 text-sm">
+          {file ? (
+            <>
+              <p className="font-medium">{file.name}</p>
+              <p className="mt-1 text-muted-foreground">
+                {formatFileSize(file.size)} - {file.type || 'Tipo nao identificado'}
+              </p>
+            </>
+          ) : (
+            <p className="text-muted-foreground">Nenhum arquivo escolhido ainda.</p>
+          )}
+        </div>
 
-      <div className="md:col-span-2">
+        <div className="mt-4">
         <div className="mb-3 h-2 overflow-hidden rounded-full bg-muted">
           <div
             className="h-full bg-primary transition-all"
@@ -154,6 +219,7 @@ export function DocumentUploader({ tripId }: { tripId: string }) {
           Enviar documento
         </Button>
       </div>
+      </div>
     </form>
   )
 }
@@ -164,4 +230,12 @@ function Field({ children }: { children: React.ReactNode }) {
 
 function ErrorText({ message }: { message?: string }) {
   return message ? <p className="text-sm text-destructive">{message}</p> : null
+}
+
+function formatFileSize(bytes: number) {
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`
+  }
+
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
 }

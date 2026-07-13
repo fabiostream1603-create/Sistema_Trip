@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { CalendarDays, Coins, Shield, Users } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -51,18 +52,26 @@ export function TripSettingsPage() {
   }, [form, tripSettingsQuery.data])
 
   async function onSubmit(values: TripSettingsValues) {
-    await updateTripMutation.mutateAsync({
-      base_currency: values.base_currency,
-      description: values.description,
-      end_date: values.end_date,
-      id: tripId,
-      name: values.name,
-      start_date: values.start_date,
-      status: values.status,
-      total_budget: values.total_budget === '' ? null : values.total_budget,
-    })
+    try {
+      await updateTripMutation.mutateAsync({
+        base_currency: values.base_currency,
+        description: values.description,
+        end_date: values.end_date,
+        id: tripId,
+        name: values.name,
+        start_date: values.start_date,
+        status: values.status,
+        total_budget: values.total_budget === '' ? null : values.total_budget,
+      })
 
-    toast.success('Configuracoes da viagem salvas.')
+      toast.success('Configuracoes da viagem salvas.')
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'Nao foi possivel salvar as configuracoes da viagem.',
+      )
+    }
   }
 
   if (!hasSupabaseEnv) {
@@ -86,7 +95,7 @@ export function TripSettingsPage() {
     )
   }
 
-  const { members } = tripSettingsQuery.data
+  const { members, trip } = tripSettingsQuery.data
 
   return (
     <div className="space-y-6">
@@ -95,6 +104,29 @@ export function TripSettingsPage() {
         <h1 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">
           Controle identidade, datas, orcamento e contexto de acesso da viagem
         </h1>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <SummaryCard
+          icon={<CalendarDays className="size-4" />}
+          label="Periodo"
+          value={`${trip.start_date} ate ${trip.end_date}`}
+        />
+        <SummaryCard
+          icon={<Coins className="size-4" />}
+          label="Moeda base"
+          value={trip.base_currency}
+        />
+        <SummaryCard
+          icon={<Shield className="size-4" />}
+          label="Status"
+          value={formatTripStatus(trip.status)}
+        />
+        <SummaryCard
+          icon={<Users className="size-4" />}
+          label="Membros"
+          value={`${members.length}`}
+        />
       </section>
 
       <Card>
@@ -186,22 +218,31 @@ export function TripSettingsPage() {
           </div>
 
           <div className="space-y-3">
-            {members.map((member) => (
-              <div
-                key={member.user_id}
-                className="flex items-center justify-between rounded-[1.5rem] border px-4 py-4"
-              >
-                <div>
-                  <p className="font-medium">{member.full_name ?? member.user_id.slice(0, 8)}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {member.invitation_status}
-                  </p>
+            {members.length > 0 ? (
+              members.map((member) => (
+                <div
+                  key={member.user_id}
+                  className="flex items-center justify-between rounded-[1.5rem] border px-4 py-4"
+                >
+                  <div>
+                    <p className="font-medium">{member.full_name ?? member.user_id.slice(0, 8)}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {formatInvitationStatus(member.invitation_status)}
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
+                    {formatMemberRole(member.role)}
+                  </span>
                 </div>
-                <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
-                  {member.role}
-                </span>
+              ))
+            ) : (
+              <div className="rounded-[1.5rem] border border-dashed bg-muted/20 px-4 py-5">
+                <p className="font-medium">Nenhum membro extra adicionado ainda</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Por enquanto apenas o criador da viagem tem acesso a este espaco.
+                </p>
               </div>
-            ))}
+            )}
           </div>
         </CardContent>
       </Card>
@@ -227,4 +268,67 @@ function StateCard({ body, title }: { body: string; title: string }) {
       </CardContent>
     </Card>
   )
+}
+
+function SummaryCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+}) {
+  return (
+    <div className="rounded-[1.5rem] border bg-background px-4 py-4 shadow-[var(--shadow-card)]">
+      <div className="flex items-center gap-2 text-sm text-primary">
+        {icon}
+        <span>{label}</span>
+      </div>
+      <p className="mt-3 font-serif text-2xl">{value}</p>
+    </div>
+  )
+}
+
+function formatTripStatus(status: string) {
+  switch (status) {
+    case 'planning':
+      return 'Planejamento'
+    case 'booked':
+      return 'Reservada'
+    case 'in_progress':
+      return 'Em andamento'
+    case 'completed':
+      return 'Concluida'
+    case 'archived':
+      return 'Arquivada'
+    default:
+      return status
+  }
+}
+
+function formatInvitationStatus(status: string) {
+  switch (status) {
+    case 'accepted':
+      return 'Convite aceito'
+    case 'pending':
+      return 'Convite pendente'
+    case 'declined':
+      return 'Convite recusado'
+    default:
+      return status
+  }
+}
+
+function formatMemberRole(role: string) {
+  switch (role) {
+    case 'owner':
+      return 'Owner'
+    case 'editor':
+      return 'Editor'
+    case 'viewer':
+      return 'Leitor'
+    default:
+      return role
+  }
 }

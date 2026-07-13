@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { CalendarRange, MapPinned, Plus, Route } from 'lucide-react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { z } from 'zod'
@@ -37,6 +38,15 @@ export function TripItineraryPage() {
       notes: '',
     },
   })
+
+  useEffect(() => {
+    const firstDate = dashboardQuery.data?.summary.start_date
+    if (!firstDate || form.getValues('date')) {
+      return
+    }
+
+    form.setValue('date', firstDate)
+  }, [dashboardQuery.data?.summary.start_date, form])
 
   async function handleCreateDay(values: ItineraryDayValues) {
     try {
@@ -78,15 +88,6 @@ export function TripItineraryPage() {
   }
 
   const { days, nextItem } = itineraryQuery.data
-
-  if (days.length === 0) {
-    return (
-      <StateCard
-        title="Nenhum dia de roteiro cadastrado ainda"
-        body="Crie dias e atividades para montar a linha do tempo, a lista diaria e os proximos compromissos."
-      />
-    )
-  }
 
   return (
     <div className="space-y-6">
@@ -184,7 +185,7 @@ export function TripItineraryPage() {
                   </p>
                   <p className="mt-2 font-semibold">{nextItem.title}</p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {format(new Date(nextItem.start_at), "dd MMM 'at' HH:mm")}
+                    {format(new Date(nextItem.start_at), "dd MMM 'as' HH:mm")}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -223,33 +224,44 @@ export function TripItineraryPage() {
               </div>
             </div>
             <div className="space-y-3">
-              {days.map((day) => (
-                <Link
-                  key={day.itinerary_day_id}
-                  className="block rounded-[1.5rem] border px-4 py-4 transition hover:bg-muted/40"
-                  to={`/trips/${tripId}/itinerary/${day.date}`}
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="font-medium">{day.title}</p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {format(new Date(day.date), 'EEEE, dd MMM yyyy')}
-                      </p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {[day.destination_city, day.destination_country].filter(Boolean).join(', ') || 'Destino nao vinculado'}
-                      </p>
+              {days.length > 0 ? (
+                days.map((day) => (
+                  <Link
+                    key={day.itinerary_day_id}
+                    className="block rounded-[1.5rem] border px-4 py-4 transition hover:bg-muted/40"
+                    to={`/trips/${tripId}/itinerary/${day.date}`}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-medium">{day.title}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {format(new Date(day.date), 'EEEE, dd MMM yyyy')}
+                        </p>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {[day.destination_city, day.destination_country].filter(Boolean).join(', ') || 'Destino nao vinculado'}
+                        </p>
+                      </div>
+                      <div className="text-right text-sm text-muted-foreground">
+                        <p>{day.items_count} atividades</p>
+                        <p>
+                          {day.first_start_at
+                            ? format(new Date(day.first_start_at), 'HH:mm')
+                            : '--:--'}
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right text-sm text-muted-foreground">
-                      <p>{day.items_count} atividades</p>
-                      <p>
-                        {day.first_start_at
-                          ? format(new Date(day.first_start_at), 'HH:mm')
-                          : '--:--'}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))
+              ) : (
+                <div className="rounded-[1.5rem] border border-dashed bg-muted/20 px-4 py-5">
+                  <p className="font-medium">Seu roteiro ainda esta vazio</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Comece criando o primeiro dia da viagem acima. Depois voce
+                    podera entrar em cada data para adicionar atividades,
+                    horarios e observacoes.
+                  </p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
