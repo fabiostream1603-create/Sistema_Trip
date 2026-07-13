@@ -13,6 +13,7 @@ import { LandingPage } from '@/pages/LandingPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { NewExpensePage } from '@/pages/trips/NewExpensePage'
 import { TripDayItineraryPage } from '@/pages/trips/TripDayItineraryPage'
+import { TripDocumentsPage } from '@/pages/trips/TripDocumentsPage'
 import { TripExpensesPage } from '@/pages/trips/TripExpensesPage'
 import { TripItineraryPage } from '@/pages/trips/TripItineraryPage'
 import { TripMapPage } from '@/pages/trips/TripMapPage'
@@ -119,12 +120,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ':tripId/documents',
-        element: (
-          <PlaceholderPage
-            title="Documents"
-            description="Private document storage and previews land in later phases."
-          />
-        ),
+        element: <TripDocumentsPage />,
       },
       {
         path: ':tripId/bookings',

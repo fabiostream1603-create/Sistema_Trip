@@ -293,4 +293,65 @@ begin
   join public.travelers traveler on traveler.trip_id = expense.trip_id
   where expense.trip_id = trip_id
   on conflict (expense_id, traveler_id) do nothing;
+
+  insert into public.documents (
+    trip_id,
+    uploaded_by,
+    traveler_id,
+    itinerary_item_id,
+    category,
+    title,
+    description,
+    storage_path,
+    original_filename,
+    mime_type,
+    file_size,
+    issue_date,
+    expiration_date,
+    is_favorite,
+    offline_priority
+  )
+  select
+    trip_id,
+    owner_user_id,
+    traveler.id,
+    itinerary_item.id,
+    document_seed.category,
+    document_seed.title,
+    document_seed.description,
+    document_seed.storage_path,
+    document_seed.original_filename,
+    document_seed.mime_type,
+    document_seed.file_size,
+    document_seed.issue_date,
+    document_seed.expiration_date,
+    document_seed.is_favorite,
+    document_seed.offline_priority
+  from (
+    values
+      ('passport', 'Fabio passport copy', 'Private travel document placeholder.', 'sample/passport-fabio.pdf', 'passport-fabio.pdf', 'application/pdf', 245760, date '2020-01-10', date '2030-01-10', true, true, 'Fabio', null),
+      ('ticket', 'Colosseum ticket PDF', 'Keep available offline for entry.', 'sample/colosseum-ticket.pdf', 'colosseum-ticket.pdf', 'application/pdf', 184320, null, null, true, true, 'Fabio', 'Colosseum entry'),
+      ('booking', 'Santorini stay confirmation', 'Accommodation confirmation placeholder.', 'sample/santorini-booking.pdf', 'santorini-booking.pdf', 'application/pdf', 163840, null, null, false, false, 'Mari', null)
+  ) as document_seed(
+    category,
+    title,
+    description,
+    storage_path,
+    original_filename,
+    mime_type,
+    file_size,
+    issue_date,
+    expiration_date,
+    is_favorite,
+    offline_priority,
+    traveler_name,
+    itinerary_title
+  )
+  join public.travelers traveler
+    on traveler.trip_id = trip_id
+   and traveler.name = document_seed.traveler_name
+  left join public.itinerary_items itinerary_item
+    on itinerary_item.trip_id = trip_id
+   and itinerary_item.title = document_seed.itinerary_title
+  on conflict (storage_path) do nothing;
 end $$;
