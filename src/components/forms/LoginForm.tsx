@@ -9,12 +9,14 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { loginSchema, type LoginValues } from '@/features/auth/auth-schema'
 import { useLogin } from '@/features/auth/use-login'
+import { useSignUp } from '@/features/auth/use-sign-up'
 import { hasSupabaseEnv } from '@/supabase/client'
 
 export function LoginForm() {
   const navigate = useNavigate()
   const location = useLocation()
   const login = useLogin()
+  const signUp = useSignUp()
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -33,6 +35,31 @@ export function LoginForm() {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Unable to sign in right now.'
+      toast.error(message)
+    }
+  }
+
+  async function onCreateAccount() {
+    const isValid = await form.trigger()
+
+    if (!isValid) {
+      return
+    }
+
+    try {
+      const values = form.getValues()
+      const data = await signUp.mutateAsync(values)
+
+      if (data.session) {
+        toast.success('Account created. You are now signed in.')
+        navigate('/trips')
+        return
+      }
+
+      toast.success('Account created. Check your email to confirm access.')
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Unable to create your account right now.'
       toast.error(message)
     }
   }
@@ -87,7 +114,7 @@ export function LoginForm() {
           <Button
             className="w-full"
             type="submit"
-            disabled={login.isPending || !hasSupabaseEnv}
+            disabled={login.isPending || signUp.isPending || !hasSupabaseEnv}
           >
             {login.isPending ? (
               <>
@@ -96,6 +123,23 @@ export function LoginForm() {
               </>
             ) : (
               'Sign in securely'
+            )}
+          </Button>
+
+          <Button
+            className="w-full"
+            type="button"
+            variant="outline"
+            onClick={onCreateAccount}
+            disabled={login.isPending || signUp.isPending || !hasSupabaseEnv}
+          >
+            {signUp.isPending ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Creating account
+              </>
+            ) : (
+              'Create account'
             )}
           </Button>
         </form>
