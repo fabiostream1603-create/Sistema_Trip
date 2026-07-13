@@ -40,6 +40,19 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+        runtimeCaching: [
+          {
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'trip-api-cache',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60,
+              },
+            },
+            urlPattern: /^https:\/\/.*\/rest\/v1\//,
+          },
+        ],
         navigateFallbackDenylist: [/^\/api\//],
       },
       devOptions: {

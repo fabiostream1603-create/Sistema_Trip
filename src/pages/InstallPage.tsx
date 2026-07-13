@@ -1,4 +1,5 @@
-import { Smartphone } from 'lucide-react'
+import { Download, Smartphone, WifiOff } from 'lucide-react'
+import { useNetworkStatus } from '@/features/offline/use-network-status'
 import { Card, CardContent } from '@/components/ui/card'
 
 const steps = [
@@ -9,6 +10,8 @@ const steps = [
 ] as const
 
 export function InstallPage() {
+  const isOnline = useNetworkStatus()
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
       <Card className="overflow-hidden">
@@ -22,6 +25,15 @@ export function InstallPage() {
               Voyage Hub is configured as a Progressive Web App so it can live on
               the home screen and open like a native trip companion.
             </p>
+            <div className="mt-6 rounded-[1.5rem] border bg-background px-4 py-4 text-sm text-foreground">
+              <div className="flex items-center gap-2">
+                {isOnline ? <Download className="size-4 text-primary" /> : <WifiOff className="size-4 text-primary" />}
+                <span>{isOnline ? 'Online now' : 'Offline right now'}</span>
+              </div>
+              <p className="mt-2 text-muted-foreground">
+                The app shell, recent itinerary data, checklists, and core trip views are prepared for offline-first usage. Sensitive documents are not blindly cached.
+              </p>
+            </div>
           </div>
           <div>
             <ol className="space-y-4">
@@ -41,6 +53,10 @@ export function InstallPage() {
               For the best install experience, keep the app online at least once
               so the shell and service worker can finish initial caching.
             </p>
+            <div className="mt-6 rounded-[1.5rem] border bg-muted/40 p-4 text-sm text-muted-foreground">
+              <p className="font-medium text-foreground">What works better offline</p>
+              <p className="mt-2">App shell, recent itinerary, next activities, checklist state, and previously loaded summaries stay accessible. New syncs resume when the connection returns.</p>
+            </div>
           </div>
         </CardContent>
       </Card>

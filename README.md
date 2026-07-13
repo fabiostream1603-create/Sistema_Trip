@@ -2,16 +2,15 @@
 
 Voyage Hub is a travel planning application for shared itineraries, expenses, documents, and maps. This repository now contains the complete Phase 1 foundation requested for a production-minded React + TypeScript + Supabase app.
 
-## Phase 1 scope
+## Current scope
 
 - React 19 + Vite + TypeScript strict
 - Tailwind CSS v4 and shadcn/ui-compatible setup
-- React Router with protected internal routes
-- Supabase client wiring and auth provider
-- Functional login screen using Supabase Auth
-- TanStack Query provider
-- Mobile-first application shell with bottom navigation and quick-add sheet
-- PWA base configuration with install guide for iPhone
+- Supabase Auth, PostgreSQL, Storage, and private document workflows
+- Trips, itinerary, expenses, documents, bookings, transports, accommodations, and checklists
+- MapLibre + OpenFreeMap integration with external navigation helpers
+- Mobile-first application shell, bottom navigation, and quick-add sheet
+- PWA with install guidance, update prompt, online/offline banner, and runtime caching for trip APIs
 - ESLint, Prettier, Vitest, React Testing Library
 
 ## Scripts
@@ -46,10 +45,14 @@ Do not add service role keys, passwords, or any private credentials to the front
 - `src/supabase`: Supabase client bootstrap
 - `src/test`: test setup
 
-The wider directory structure for future phases is documented below and partially pre-created through placeholder modules and route stubs.
-
-## Next steps
+## Setup flow
 
 1. Create the Supabase project and add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
 2. Configure Supabase Auth email/password and redirect URLs.
-3. Start Phase 2 with migrations, RLS, trip membership, and the first real trip data flow.
+3. Run all SQL migrations in `supabase/migrations`.
+4. Optionally run `supabase/seed.sql` after creating your test Auth users.
+5. Start the app with `npm run dev`.
+
+## Current status
+
+The project now includes the main Phase 1-8 foundations requested so far. Remaining big product areas are traveler management polish, settings, places CRUD, and deeper offline sync behavior.

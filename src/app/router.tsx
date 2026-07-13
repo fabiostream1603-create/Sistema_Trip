@@ -14,6 +14,7 @@ import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { NewExpensePage } from '@/pages/trips/NewExpensePage'
 import { TripAccommodationsPage } from '@/pages/trips/TripAccommodationsPage'
 import { TripBookingsPage } from '@/pages/trips/TripBookingsPage'
+import { TripChecklistsPage } from '@/pages/trips/TripChecklistsPage'
 import { TripDayItineraryPage } from '@/pages/trips/TripDayItineraryPage'
 import { TripDocumentsPage } from '@/pages/trips/TripDocumentsPage'
 import { TripExpensesPage } from '@/pages/trips/TripExpensesPage'
@@ -139,12 +140,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ':tripId/checklists',
-        element: (
-          <PlaceholderPage
-            title="Checklists"
-            description="Packing, admin tasks, and traveler-specific prep lists."
-          />
-        ),
+        element: <TripChecklistsPage />,
       },
       {
         path: ':tripId/travelers',

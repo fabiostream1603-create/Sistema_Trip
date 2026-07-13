@@ -573,4 +573,60 @@ begin
   where booking.trip_id = trip_id
     and booking.confirmation_code = 'VH-STAY-777'
   on conflict do nothing;
+
+  insert into public.checklists (
+    trip_id,
+    title,
+    category,
+    traveler_id,
+    position
+  )
+  select
+    trip_id,
+    checklist_seed.title,
+    checklist_seed.category,
+    traveler.id,
+    checklist_seed.position
+  from (
+    values
+      ('Carry-on essentials', 'packing', 'Fabio', 1),
+      ('Shared admin tasks', 'documents', 'Mari', 2)
+  ) as checklist_seed(title, category, traveler_name, position)
+  join public.travelers traveler
+    on traveler.trip_id = trip_id
+   and traveler.name = checklist_seed.traveler_name
+  on conflict do nothing;
+
+  insert into public.checklist_items (
+    checklist_id,
+    title,
+    description,
+    is_completed,
+    completed_by,
+    completed_at,
+    priority,
+    quantity,
+    position
+  )
+  select
+    checklist.id,
+    item_seed.title,
+    item_seed.description,
+    item_seed.is_completed,
+    case when item_seed.is_completed then owner_user_id else null end,
+    case when item_seed.is_completed then timezone('utc', now()) else null end,
+    item_seed.priority,
+    item_seed.quantity,
+    item_seed.position
+  from (
+    values
+      ('Carry-on essentials', 'Passport copy', 'Keep a printed copy in a separate bag.', true, 'high', 1, 1),
+      ('Carry-on essentials', 'Phone charger', 'Bring EU adapter together.', false, 'high', 1, 2),
+      ('Shared admin tasks', 'Verify ferry cancellation rules', 'Double check before final purchase.', false, 'medium', 1, 1),
+      ('Shared admin tasks', 'Download tickets offline', 'Keep access even with unstable internet.', false, 'high', 2, 2)
+  ) as item_seed(checklist_title, title, description, is_completed, priority, quantity, position)
+  join public.checklists checklist
+    on checklist.trip_id = trip_id
+   and checklist.title = item_seed.checklist_title
+  on conflict do nothing;
 end $$;
