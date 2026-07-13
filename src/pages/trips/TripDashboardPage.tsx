@@ -5,6 +5,8 @@ import {
   FileText,
   MapPinned,
   Navigation,
+  Route,
+  Settings,
   Users,
 } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
@@ -148,6 +150,33 @@ export function TripDashboardPage() {
         ))}
       </section>
 
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <QuickLinkCard
+          title="Editar roteiro"
+          description="Criar dias, atividades e organizar a viagem em ordem."
+          to={`/trips/${tripId}/itinerary`}
+          icon={Route}
+        />
+        <QuickLinkCard
+          title="Lancar gastos"
+          description="Adicionar valores, moeda, categoria e local dos custos."
+          to={`/trips/${tripId}/expenses`}
+          icon={CircleDollarSign}
+        />
+        <QuickLinkCard
+          title="Anexar documentos"
+          description="Guardar passagens, reservas, hoteis e comprovantes por pessoa."
+          to={`/trips/${tripId}/documents`}
+          icon={FileText}
+        />
+        <QuickLinkCard
+          title="Gerenciar viagem"
+          description="Ajustar viajantes, preferencias e detalhes gerais da viagem."
+          to={`/trips/${tripId}/settings`}
+          icon={Settings}
+        />
+      </section>
+
       <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <Card>
           <CardContent className="p-6">
@@ -238,5 +267,34 @@ export function TripDashboardPage() {
         </Card>
       </section>
     </div>
+  )
+}
+
+function QuickLinkCard({
+  title,
+  description,
+  to,
+  icon: Icon,
+}: {
+  title: string
+  description: string
+  to: string
+  icon: typeof MapPinned
+}) {
+  return (
+    <Card>
+      <CardContent className="space-y-4 p-6">
+        <div className="flex items-center gap-3">
+          <div className="rounded-full bg-primary/10 p-2 text-primary">
+            <Icon className="size-5" />
+          </div>
+          <h2 className="font-serif text-2xl">{title}</h2>
+        </div>
+        <p className="text-sm text-muted-foreground">{description}</p>
+        <Button asChild variant="outline">
+          <Link to={to}>Abrir</Link>
+        </Button>
+      </CardContent>
+    </Card>
   )
 }
