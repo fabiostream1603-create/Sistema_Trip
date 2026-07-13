@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "DM Sans", "Segoe UI", sans-serif;
+  --font-serif: "Fraunces", Georgia, serif;
+  --color-background: #f6f0e4;
+  --color-foreground: #16302b;
+  --color-card: #fffdf8;
+  --color-card-foreground: #16302b;
+  --color-popover: #fffdf8;
+  --color-popover-foreground: #16302b;
+  --color-primary: #0f766e;
+  --color-primary-foreground: #f9fafb;
+  --color-secondary: #d9e5d6;
+  --color-secondary-foreground: #24413d;
+  --color-muted: #ece6db;
+  --color-muted-foreground: #5d6d68;
+  --color-accent: #f08b6f;
+  --color-accent-foreground: #16302b;
+  --color-border: #d8cfbf;
+  --color-input: #efe7d7;
+  --color-ring: #0f766e;
+  --color-destructive: #b94132;
+  --color-destructive-foreground: #fff7f5;
+  --radius: 1.25rem;
+  --shadow-card: 0 20px 45px rgba(17, 43, 39, 0.08);
+}
+
+.dark {
+  --color-background: #102320;
+  --color-foreground: #f8f1e4;
+  --color-card: #16302b;
+  --color-card-foreground: #f8f1e4;
+  --color-popover: #16302b;
+  --color-popover-foreground: #f8f1e4;
+  --color-primary: #7bc0bb;
+  --color-primary-foreground: #102320;
+  --color-secondary: #213d38;
+  --color-secondary-foreground: #eff1e8;
+  --color-muted: #1a3430;
+  --color-muted-foreground: #b8c6c0;
+  --color-accent: #ff9f80;
+  --color-accent-foreground: #102320;
+  --color-border: #2c4a45;
+  --color-input: #1e3a35;
+  --color-ring: #7bc0bb;
+  --color-destructive: #d46b5a;
+  --color-destructive-foreground: #fff4f2;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    min-height: 100svh;
+    background-image:
+      radial-gradient(circle at top, rgba(15, 118, 110, 0.12), transparent 28%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.36), transparent 35%);
+  }
+
+  #root {
+    min-height: 100svh;
+  }
+}
+
+@layer utilities {
+  .app-shell {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+
+  .glass-panel {
+    background: color-mix(in srgb, var(--color-card) 82%, transparent);
+    backdrop-filter: blur(16px);
+  }
+}
