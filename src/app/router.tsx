@@ -12,11 +12,14 @@ import { InstallPage } from '@/pages/InstallPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { NewExpensePage } from '@/pages/trips/NewExpensePage'
+import { TripAccommodationsPage } from '@/pages/trips/TripAccommodationsPage'
+import { TripBookingsPage } from '@/pages/trips/TripBookingsPage'
 import { TripDayItineraryPage } from '@/pages/trips/TripDayItineraryPage'
 import { TripDocumentsPage } from '@/pages/trips/TripDocumentsPage'
 import { TripExpensesPage } from '@/pages/trips/TripExpensesPage'
 import { TripItineraryPage } from '@/pages/trips/TripItineraryPage'
 import { TripMapPage } from '@/pages/trips/TripMapPage'
+import { TripTransportsPage } from '@/pages/trips/TripTransportsPage'
 import { TripsPage } from '@/pages/trips/TripsPage'
 import { TripDashboardPage } from '@/pages/trips/TripDashboardPage'
 
@@ -124,30 +127,15 @@ export const router = createBrowserRouter([
       },
       {
         path: ':tripId/bookings',
-        element: (
-          <PlaceholderPage
-            title="Bookings"
-            description="Reservations, confirmation codes, and key details."
-          />
-        ),
+        element: <TripBookingsPage />,
       },
       {
         path: ':tripId/transports',
-        element: (
-          <PlaceholderPage
-            title="Transport"
-            description="Flights, ferries, trains, and transfers."
-          />
-        ),
+        element: <TripTransportsPage />,
       },
       {
         path: ':tripId/accommodations',
-        element: (
-          <PlaceholderPage
-            title="Accommodations"
-            description="Hotels, check-in times, and stay details."
-          />
-        ),
+        element: <TripAccommodationsPage />,
       },
       {
         path: ':tripId/checklists',

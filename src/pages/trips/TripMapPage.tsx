@@ -3,10 +3,11 @@ import { Expand, LocateFixed, MapPinned, Route } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { TripMap } from '@/components/maps/TripMap'
-import type { MapPoint } from '@/components/maps/types'
+import type { MapCategory, MapPoint } from '@/components/maps/types'
 import { UserLocationControl } from '@/components/maps/UserLocationControl'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { useTripLogistics } from '@/features/logistics/use-trip-logistics'
 import { useTripDashboard } from '@/features/trips/use-trip-dashboard'
 import {
   haversineDistanceInKm,
@@ -19,6 +20,7 @@ import { hasSupabaseEnv } from '@/supabase/client'
 export function TripMapPage() {
   const { tripId = '' } = useParams()
   const dashboardQuery = useTripDashboard(tripId)
+  const logisticsQuery = useTripLogistics(tripId)
   const [selectedCity, setSelectedCity] = useState<string>('all')
   const [selectedCountry, setSelectedCountry] = useState<string>('all')
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null)
@@ -26,18 +28,19 @@ export function TripMapPage() {
 
   const points = useMemo<MapPoint[]>(() => {
     const destinations = dashboardQuery.data?.destinations ?? []
-    return destinations
+    const logistics = logisticsQuery.data
+    const destinationPoints = destinations
       .filter((destination) =>
         isValidCoordinates({
           latitude: destination.latitude ?? Number.NaN,
           longitude: destination.longitude ?? Number.NaN,
         }),
       )
-      .map((destination) => ({
-        id: destination.id,
-        title: destination.city,
-        subtitle: destination.country,
-        category: 'destination',
+        .map((destination) => ({
+          id: destination.id,
+          title: destination.city,
+          subtitle: destination.country,
+          category: 'destination' as const,
         country: destination.country,
         city: destination.city,
         latitude: destination.latitude!,
@@ -52,7 +55,83 @@ export function TripMapPage() {
             : undefined,
         navigationLabel: `${destination.city}, ${destination.country}`,
       }))
-  }, [dashboardQuery.data?.destinations])
+    const accommodationPoints =
+      logistics?.accommodations
+        .filter((stay) =>
+          isValidCoordinates({
+            latitude: stay.latitude ?? Number.NaN,
+            longitude: stay.longitude ?? Number.NaN,
+          }),
+        )
+        .map((stay) => ({
+          id: stay.id,
+          title: stay.name,
+          subtitle: stay.address ?? 'Accommodation',
+          category: 'accommodation' as const,
+          country: null,
+          city: stay.address ?? 'Accommodation',
+          latitude: stay.latitude!,
+          longitude: stay.longitude!,
+          notes: stay.notes,
+          dateLabel:
+            stay.checkin_at && stay.checkout_at
+              ? `${format(new Date(stay.checkin_at), 'dd MMM')} - ${format(
+                  new Date(stay.checkout_at),
+                  'dd MMM',
+                )}`
+              : undefined,
+          navigationLabel: stay.name,
+        })) ?? []
+    const transportPoints =
+      logistics?.transportSegments.flatMap((segment) => {
+        const pointsForSegment: MapPoint[] = []
+        if (
+          isValidCoordinates({
+            latitude: segment.origin_latitude ?? Number.NaN,
+            longitude: segment.origin_longitude ?? Number.NaN,
+          })
+        ) {
+          pointsForSegment.push({
+            id: `${segment.id}-origin`,
+            title: segment.origin_name,
+            subtitle: `${segment.transport_type} origin`,
+            category: getTransportMapCategory(segment.transport_type),
+            country: null,
+            city: segment.origin_name,
+            latitude: segment.origin_latitude!,
+            longitude: segment.origin_longitude!,
+            notes: segment.notes,
+            dateLabel: format(new Date(segment.departure_at), 'dd MMM HH:mm'),
+            navigationLabel: segment.origin_name,
+          })
+        }
+        if (
+          isValidCoordinates({
+            latitude: segment.destination_latitude ?? Number.NaN,
+            longitude: segment.destination_longitude ?? Number.NaN,
+          })
+        ) {
+          pointsForSegment.push({
+            id: `${segment.id}-destination`,
+            title: segment.destination_name,
+            subtitle: `${segment.transport_type} destination`,
+            category: getTransportMapCategory(segment.transport_type),
+            country: null,
+            city: segment.destination_name,
+            latitude: segment.destination_latitude!,
+            longitude: segment.destination_longitude!,
+            notes: segment.notes,
+            dateLabel: segment.arrival_at
+              ? format(new Date(segment.arrival_at), 'dd MMM HH:mm')
+              : undefined,
+            navigationLabel: segment.destination_name,
+          })
+        }
+        return pointsForSegment
+      }) ?? []
+
+    return [...destinationPoints, ...accommodationPoints, ...transportPoints]
+  }, [dashboardQuery.data?.destinations, logisticsQuery.data])
 
   const filteredPoints = useMemo(
     () =>
@@ -276,6 +355,25 @@ export function TripMapPage() {
       </Card>
     </div>
   )
+}
+
+function getTransportMapCategory(
+  transportType: 'flight' | 'ferry' | 'train' | 'bus' | 'transfer' | 'car',
+): MapCategory {
+  switch (transportType) {
+    case 'flight':
+      return 'airport'
+    case 'ferry':
+      return 'port'
+    case 'train':
+      return 'train_station'
+    case 'bus':
+    case 'transfer':
+    case 'car':
+      return 'bus_station'
+    default:
+      return 'other'
+  }
 }
 
 function SelectFilter({

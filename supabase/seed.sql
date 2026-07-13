@@ -354,4 +354,223 @@ begin
     on itinerary_item.trip_id = trip_id
    and itinerary_item.title = document_seed.itinerary_title
   on conflict (storage_path) do nothing;
+
+  insert into public.bookings (
+    trip_id,
+    type,
+    provider,
+    confirmation_code,
+    status,
+    start_at,
+    end_at,
+    timezone,
+    origin,
+    destination,
+    address,
+    latitude,
+    longitude,
+    contact_name,
+    website_url,
+    total_amount,
+    currency,
+    paid_amount,
+    payment_status,
+    notes
+  )
+  values
+    (
+      trip_id,
+      'flight',
+      'ITA Airways',
+      'VH-ROME-001',
+      'confirmed',
+      timestamptz '2026-09-19 09:10:00+02',
+      timestamptz '2026-09-19 11:00:00+02',
+      'Europe/Rome',
+      'Sao Paulo',
+      'Rome',
+      'Rome Fiumicino Airport',
+      41.800277,
+      12.238889,
+      'ITA Support',
+      'https://www.ita-airways.com',
+      980.00,
+      'EUR',
+      980.00,
+      'paid',
+      'Long-haul arrival booking placeholder.'
+    ),
+    (
+      trip_id,
+      'ferry',
+      'Blue Star Ferries',
+      'VH-CYCLADES-009',
+      'planned',
+      timestamptz '2026-10-01 10:30:00+03',
+      timestamptz '2026-10-01 13:15:00+03',
+      'Europe/Athens',
+      'Santorini',
+      'Milos',
+      'Santorini Port',
+      36.393156,
+      25.461510,
+      'Blue Star Ferries',
+      'https://www.bluestarferries.com',
+      120.00,
+      'EUR',
+      0.00,
+      'pending',
+      'Island hop still flexible.'
+    ),
+    (
+      trip_id,
+      'accommodation',
+      'Santorini Suites',
+      'VH-STAY-777',
+      'confirmed',
+      timestamptz '2026-09-27 15:00:00+03',
+      timestamptz '2026-10-01 11:00:00+03',
+      'Europe/Athens',
+      'Santorini',
+      'Oia',
+      'Oia, Santorini',
+      36.461819,
+      25.375311,
+      'Front Desk',
+      'https://example.com/santorini-suites',
+      860.00,
+      'EUR',
+      430.00,
+      'partial',
+      'Half paid, rest at check-in.'
+    )
+  on conflict do nothing;
+
+  insert into public.transport_segments (
+    trip_id,
+    booking_id,
+    transport_type,
+    company,
+    service_number,
+    origin_name,
+    origin_code,
+    origin_latitude,
+    origin_longitude,
+    destination_name,
+    destination_code,
+    destination_latitude,
+    destination_longitude,
+    departure_at,
+    arrival_at,
+    departure_timezone,
+    arrival_timezone,
+    terminal,
+    gate,
+    seat,
+    baggage,
+    checkin_url,
+    locator,
+    status,
+    notes
+  )
+  select
+    trip_id,
+    booking.id,
+    segment_seed.transport_type,
+    segment_seed.company,
+    segment_seed.service_number,
+    segment_seed.origin_name,
+    segment_seed.origin_code,
+    segment_seed.origin_latitude,
+    segment_seed.origin_longitude,
+    segment_seed.destination_name,
+    segment_seed.destination_code,
+    segment_seed.destination_latitude,
+    segment_seed.destination_longitude,
+    segment_seed.departure_at,
+    segment_seed.arrival_at,
+    segment_seed.departure_timezone,
+    segment_seed.arrival_timezone,
+    segment_seed.terminal,
+    segment_seed.gate,
+    segment_seed.seat,
+    segment_seed.baggage,
+    segment_seed.checkin_url,
+    segment_seed.locator,
+    segment_seed.status,
+    segment_seed.notes
+  from (
+    values
+      ('VH-ROME-001', 'flight', 'ITA Airways', 'AZ781', 'Rome Fiumicino Airport', 'FCO', 41.800277, 12.238889, 'Rome Centro', null, 41.902782, 12.496366, timestamptz '2026-09-19 09:10:00+02', timestamptz '2026-09-19 11:00:00+02', 'Europe/Rome', 'Europe/Rome', 'T3', 'A12', '18A', '2 checked bags', 'https://www.ita-airways.com/check-in', 'VH-ROME-001', 'confirmed', 'Arrival segment placeholder.'),
+      ('VH-CYCLADES-009', 'ferry', 'Blue Star Ferries', 'BSF909', 'Santorini Port', 'JTR-PORT', 36.393156, 25.461510, 'Milos Port', 'MLO-PORT', 36.723370, 24.444010, timestamptz '2026-10-01 10:30:00+03', timestamptz '2026-10-01 13:15:00+03', 'Europe/Athens', 'Europe/Athens', null, null, 'Deck seating', '1 cabin bag', 'https://www.bluestarferries.com', 'VH-CYCLADES-009', 'planned', 'Sea conditions may adjust exact departure.')
+  ) as segment_seed(
+    confirmation_code,
+    transport_type,
+    company,
+    service_number,
+    origin_name,
+    origin_code,
+    origin_latitude,
+    origin_longitude,
+    destination_name,
+    destination_code,
+    destination_latitude,
+    destination_longitude,
+    departure_at,
+    arrival_at,
+    departure_timezone,
+    arrival_timezone,
+    terminal,
+    gate,
+    seat,
+    baggage,
+    checkin_url,
+    locator,
+    status,
+    notes
+  )
+  join public.bookings booking
+    on booking.trip_id = trip_id
+   and booking.confirmation_code = segment_seed.confirmation_code
+  on conflict do nothing;
+
+  insert into public.accommodations (
+    trip_id,
+    booking_id,
+    name,
+    address,
+    latitude,
+    longitude,
+    checkin_at,
+    checkout_at,
+    confirmation_code,
+    contact_name,
+    contact_phone,
+    access_instructions,
+    wifi_name,
+    wifi_password,
+    website_url,
+    notes
+  )
+  select
+    trip_id,
+    booking.id,
+    'Santorini Suites',
+    'Oia, Santorini',
+    36.461819,
+    25.375311,
+    timestamptz '2026-09-27 15:00:00+03',
+    timestamptz '2026-10-01 11:00:00+03',
+    'VH-STAY-777',
+    'Front Desk',
+    '+30 210 555 1000',
+    'Call reception 20 minutes before arrival for luggage help.',
+    'SantoriniGuest',
+    'island-breeze-2026',
+    'https://example.com/santorini-suites',
+    'Sea view suite placeholder.'
+  from public.bookings booking
+  where booking.trip_id = trip_id
+    and booking.confirmation_code = 'VH-STAY-777'
+  on conflict do nothing;
 end $$;

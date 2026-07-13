@@ -15,6 +15,9 @@ Included now:
 - `expenses`
 - `expense_splits`
 - `documents`
+- `bookings`
+- `transport_segments`
+- `accommodations`
 - `set_updated_at()` trigger helper
 - `handle_new_user_profile()` auth trigger
 - `is_trip_member()`, `owns_trip()`, and `has_trip_role()`
