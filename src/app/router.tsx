@@ -11,6 +11,8 @@ import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage'
 import { InstallPage } from '@/pages/InstallPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
+import { TripDayItineraryPage } from '@/pages/trips/TripDayItineraryPage'
+import { TripItineraryPage } from '@/pages/trips/TripItineraryPage'
 import { TripMapPage } from '@/pages/trips/TripMapPage'
 import { TripsPage } from '@/pages/trips/TripsPage'
 import { TripDashboardPage } from '@/pages/trips/TripDashboardPage'
@@ -86,21 +88,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ':tripId/itinerary',
-        element: (
-          <PlaceholderPage
-            title="Itinerary"
-            description="Timeline, day-by-day planning, and map coordination live here."
-          />
-        ),
+        element: <TripItineraryPage />,
       },
       {
         path: ':tripId/itinerary/:date',
-        element: (
-          <PlaceholderPage
-            title="Day Plan"
-            description="Focused daily itinerary view with upcoming activities."
-          />
-        ),
+        element: <TripDayItineraryPage />,
       },
       {
         path: ':tripId/map',

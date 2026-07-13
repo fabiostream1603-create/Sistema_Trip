@@ -9,6 +9,8 @@ Included now:
 - `trip_members`
 - `travelers`
 - `destinations`
+- `itinerary_days`
+- `itinerary_items`
 - `set_updated_at()` trigger helper
 - `handle_new_user_profile()` auth trigger
 - `is_trip_member()`, `owns_trip()`, and `has_trip_role()`
