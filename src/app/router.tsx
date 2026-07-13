@@ -11,6 +11,7 @@ import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage'
 import { InstallPage } from '@/pages/InstallPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
+import { ProfilePage } from '@/pages/ProfilePage'
 import { NewExpensePage } from '@/pages/trips/NewExpensePage'
 import { TripAccommodationsPage } from '@/pages/trips/TripAccommodationsPage'
 import { TripBookingsPage } from '@/pages/trips/TripBookingsPage'
@@ -21,6 +22,8 @@ import { TripExpensesPage } from '@/pages/trips/TripExpensesPage'
 import { TripItineraryPage } from '@/pages/trips/TripItineraryPage'
 import { TripMapPage } from '@/pages/trips/TripMapPage'
 import { TripPlacesPage } from '@/pages/trips/TripPlacesPage'
+import { TripSettingsPage } from '@/pages/trips/TripSettingsPage'
+import { TripTravelersPage } from '@/pages/trips/TripTravelersPage'
 import { TripTransportsPage } from '@/pages/trips/TripTransportsPage'
 import { TripsPage } from '@/pages/trips/TripsPage'
 import { TripDashboardPage } from '@/pages/trips/TripDashboardPage'
@@ -71,10 +74,7 @@ export const router = createBrowserRouter([
     path: '/profile',
     element: (
       <ProtectedRoute>
-        <PlaceholderPage
-          title="Profile"
-          description="Personal profile, theme, currency, and navigation preferences."
-        />
+        <ProfilePage />
       </ProtectedRoute>
     ),
   },
@@ -140,21 +140,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ':tripId/travelers',
-        element: (
-          <PlaceholderPage
-            title="Travelers"
-            description="Manage travelers, roles, and expense split identities."
-          />
-        ),
+        element: <TripTravelersPage />,
       },
       {
         path: ':tripId/settings',
-        element: (
-          <PlaceholderPage
-            title="Trip Settings"
-            description="Permissions, preferences, and trip-level configuration."
-          />
-        ),
+        element: <TripSettingsPage />,
       },
     ],
   },

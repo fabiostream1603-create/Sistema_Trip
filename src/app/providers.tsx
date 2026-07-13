@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes'
 import { useState } from 'react'
 import type { PropsWithChildren } from 'react'
 import { AuthProvider } from '@/features/auth/AuthProvider'
+import { useOfflineMutationQueueSync } from '@/features/offline/use-offline-mutation-queue'
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(
@@ -21,8 +22,16 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <OfflineMutationQueueSyncBridge>{children}</OfflineMutationQueueSyncBridge>
+        </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
   )
+}
+
+function OfflineMutationQueueSyncBridge({ children }: PropsWithChildren) {
+  useOfflineMutationQueueSync()
+
+  return children
 }

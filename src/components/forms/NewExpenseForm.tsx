@@ -77,7 +77,7 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
       baseAmount,
     )
 
-    await createExpenseMutation.mutateAsync({
+    const result = await createExpenseMutation.mutateAsync({
       base_currency: baseCurrency as CurrencyCode,
       category_id: values.category_id,
       city: values.city,
@@ -101,7 +101,11 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
       description: undefined,
     })
 
-    toast.success('Expense created.')
+    toast.success(
+      result.queued
+        ? 'Expense saved offline. It will sync when the connection returns.'
+        : 'Expense created.',
+    )
     navigate(`/trips/${tripId}/expenses`)
   }
 

@@ -1,4 +1,5 @@
 import { CheckCircle2, Circle } from 'lucide-react'
+import { toast } from 'sonner'
 import { Card, CardContent } from '@/components/ui/card'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useToggleChecklistItem } from '@/features/checklists/use-toggle-checklist-item'
@@ -17,11 +18,15 @@ export function TripChecklistsPage() {
       return
     }
 
-    await toggleItemMutation.mutateAsync({
+    const result = await toggleItemMutation.mutateAsync({
       checklistItemId: itemId,
       completedBy: session.user.id,
       isCompleted: nextState,
     })
+
+    if (result.queued) {
+      toast.success('Checklist change queued offline. It will sync when you are back online.')
+    }
   }
 
   if (!hasSupabaseEnv) {
