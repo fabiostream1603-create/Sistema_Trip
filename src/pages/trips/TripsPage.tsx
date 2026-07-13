@@ -32,7 +32,16 @@ const createTripSchema = z
     start_date: z.string().min(1, 'Escolha a data de inicio.'),
     end_date: z.string().min(1, 'Escolha a data de fim.'),
     base_currency: z.enum(['EUR', 'BRL']),
-    total_budget: z.coerce.number().nonnegative('O orçamento nao pode ser negativo.'),
+    total_budget: z.preprocess(
+      (value) => {
+        if (value === '' || value === null || value === undefined) {
+          return undefined
+        }
+
+        return Number(value)
+      },
+      z.number().nonnegative('O orcamento nao pode ser negativo.').optional(),
+    ),
   })
   .refine((values) => values.end_date >= values.start_date, {
     message: 'A data final precisa ser igual ou posterior a data inicial.',
@@ -56,7 +65,7 @@ export function TripsPage() {
       start_date: defaultDates.start_date,
       end_date: defaultDates.end_date,
       base_currency: 'EUR',
-      total_budget: 0,
+      total_budget: undefined,
     },
   })
 
@@ -74,8 +83,6 @@ export function TripsPage() {
           : 'Viajante principal'
 
       const tripId = await createTripMutation.mutateAsync({
-        owner_id: session.user.id,
-        owner_email: session.user.email ?? null,
         traveler_name: travelerName,
         name: values.name,
         description: values.description,
@@ -317,7 +324,13 @@ function TripCreateForm({ form, isPending, onSubmit }: TripCreateFormProps) {
 
       <Field>
         <Label htmlFor="total_budget">Orcamento total</Label>
-        <Input id="total_budget" step="0.01" type="number" {...form.register('total_budget')} />
+        <Input
+          id="total_budget"
+          step="0.01"
+          type="number"
+          placeholder="Opcional"
+          {...form.register('total_budget')}
+        />
         <ErrorText message={form.formState.errors.total_budget?.message} />
       </Field>
 

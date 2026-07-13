@@ -66,8 +66,6 @@ export type TripDashboardData = {
 }
 
 export type CreateTripInput = {
-  owner_id: string
-  owner_email?: string | null
   traveler_name: string
   name: string
   description?: string

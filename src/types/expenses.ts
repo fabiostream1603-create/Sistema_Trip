@@ -73,6 +73,7 @@ export type ExpensesPageData = {
   summary: FinancialSummary | null
   travelers: Array<{ id: string; name: string }>
   balances: TravelerBalance[]
+  destinations: Array<{ id: string; city: string; country: string }>
 }
 
 export type CreateExpenseInput = {

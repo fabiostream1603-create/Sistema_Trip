@@ -62,6 +62,17 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
     }
   }, [dataQuery.data, form])
 
+  function handleDestinationSuggestionChange(destinationId: string) {
+    const destination = dataQuery.data?.destinations.find((entry) => entry.id === destinationId)
+
+    if (!destination) {
+      return
+    }
+
+    form.setValue('city', destination.city)
+    form.setValue('country', destination.country)
+  }
+
   async function onSubmit(values: ExpenseFormValues) {
     if (!dataQuery.data || !session?.user.id) {
       return
@@ -139,6 +150,25 @@ export function NewExpenseForm({ tripId }: { tripId: string }) {
         </div>
 
         <form className="grid gap-5 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
+          <Field>
+            <Label htmlFor="destination_suggestion">Local sugerido</Label>
+            <select
+              className="h-12 rounded-2xl border border-border bg-background px-4 text-sm outline-none"
+              id="destination_suggestion"
+              defaultValue=""
+              onChange={(event) => handleDestinationSuggestionChange(event.target.value)}
+            >
+              <option value="">Selecionar cidade da viagem</option>
+              {dataQuery.data.destinations.map((destination) => (
+                <option key={destination.id} value={destination.id}>
+                  {destination.city}, {destination.country}
+                </option>
+              ))}
+            </select>
+          </Field>
+
+          <div />
+
           <Field>
             <Label htmlFor="title">Titulo</Label>
             <Input id="title" {...form.register('title')} />

@@ -24,6 +24,7 @@ export async function getTripExpensesData(tripId: string): Promise<ExpensesPageD
     summaryResult,
     travelersResult,
     balancesResult,
+    destinationsResult,
   ] = await Promise.all([
     client
       .from('expense_categories')
@@ -55,6 +56,11 @@ export async function getTripExpensesData(tripId: string): Promise<ExpensesPageD
       .from('trip_member_balances')
       .select('*')
       .eq('trip_id', tripId),
+    client
+      .from('destinations')
+      .select('id, city, country')
+      .eq('trip_id', tripId)
+      .order('position', { ascending: true }),
   ])
 
   if (categoriesResult.error) throw categoriesResult.error
@@ -62,6 +68,7 @@ export async function getTripExpensesData(tripId: string): Promise<ExpensesPageD
   if (summaryResult.error) throw summaryResult.error
   if (travelersResult.error) throw travelersResult.error
   if (balancesResult.error) throw balancesResult.error
+  if (destinationsResult.error) throw destinationsResult.error
 
   const expenses: ExpenseListItem[] = (expensesResult.data ?? []).map((expense) => ({
     ...(expense as Record<string, unknown>),
@@ -75,6 +82,11 @@ export async function getTripExpensesData(tripId: string): Promise<ExpensesPageD
     summary: (summaryResult.data ?? null) as FinancialSummary | null,
     travelers: (travelersResult.data ?? []) as Array<{ id: string; name: string }>,
     balances: (balancesResult.data ?? []) as TravelerBalance[],
+    destinations: (destinationsResult.data ?? []) as Array<{
+      id: string
+      city: string
+      country: string
+    }>,
   }
 }
 

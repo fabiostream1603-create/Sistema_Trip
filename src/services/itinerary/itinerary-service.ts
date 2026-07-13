@@ -1,5 +1,7 @@
 import { supabase } from '@/supabase/client'
 import type {
+  CreateItineraryDayInput,
+  CreateItineraryItemInput,
   DayItinerary,
   ItineraryDayOverview,
   ItineraryItem,
@@ -81,5 +83,46 @@ export async function getTripDayItinerary(
   return {
     day: dayResult.data as ItineraryDayOverview,
     items: (itemsResult.data ?? []) as ItineraryItem[],
+  }
+}
+
+export async function createItineraryDay(input: CreateItineraryDayInput) {
+  const client = requireSupabase()
+  const { error } = await client.from('itinerary_days').insert({
+    trip_id: input.trip_id,
+    destination_id: input.destination_id || null,
+    date: input.date,
+    title: input.title,
+    notes: input.notes?.trim() || null,
+  })
+
+  if (error) {
+    throw error
+  }
+}
+
+export async function createItineraryItem(input: CreateItineraryItemInput) {
+  const client = requireSupabase()
+  const { error } = await client.from('itinerary_items').insert({
+    trip_id: input.trip_id,
+    itinerary_day_id: input.itinerary_day_id,
+    destination_id: input.destination_id || null,
+    title: input.title,
+    description: input.description?.trim() || null,
+    category: input.category,
+    start_at: input.start_at,
+    end_at: input.end_at || null,
+    timezone: input.timezone,
+    status: input.status,
+    priority: input.priority,
+    address: input.address?.trim() || null,
+    expected_cost: input.expected_cost ?? null,
+    currency: input.currency ?? null,
+    notes: input.notes?.trim() || null,
+    created_by: input.created_by,
+  })
+
+  if (error) {
+    throw error
   }
 }

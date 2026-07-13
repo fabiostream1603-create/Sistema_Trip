@@ -32,53 +32,22 @@ export async function listTrips() {
 
 export async function createTrip(input: CreateTripInput) {
   const client = requireSupabase()
-  const { data, error } = await client
-    .from('trips')
-    .insert({
-      owner_id: input.owner_id,
-      name: input.name,
-      description: input.description?.trim() || null,
-      start_date: input.start_date,
-      end_date: input.end_date,
-      base_currency: input.base_currency,
-      total_budget: input.total_budget ?? null,
-      status: input.status,
-    })
-    .select('id')
-    .single()
+  const { data, error } = await client.rpc('create_trip_workspace', {
+    p_name: input.name,
+    p_description: input.description?.trim() || null,
+    p_start_date: input.start_date,
+    p_end_date: input.end_date,
+    p_base_currency: input.base_currency,
+    p_total_budget: input.total_budget ?? null,
+    p_status: input.status,
+    p_traveler_name: input.traveler_name,
+  })
 
   if (error) {
     throw error
   }
 
-  const tripId = data.id as string
-
-  const memberResult = await client.from('trip_members').insert({
-    trip_id: tripId,
-    user_id: input.owner_id,
-    role: 'owner',
-    invitation_status: 'accepted',
-  })
-
-  if (memberResult.error) {
-    await client.from('trips').delete().eq('id', tripId)
-    throw memberResult.error
-  }
-
-  const travelerResult = await client.from('travelers').insert({
-    trip_id: tripId,
-    linked_user_id: input.owner_id,
-    name: input.traveler_name,
-    email: input.owner_email || null,
-    color_identifier: 'mediterranean-blue',
-  })
-
-  if (travelerResult.error) {
-    await client.from('trips').delete().eq('id', tripId)
-    throw travelerResult.error
-  }
-
-  return tripId
+  return data as string
 }
 
 export async function getTripDashboardData(

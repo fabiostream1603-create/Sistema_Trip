@@ -63,3 +63,30 @@ export type ItineraryOverviewData = {
   days: ItineraryDayOverview[]
   nextItem: ItineraryItem | null
 }
+
+export type CreateItineraryDayInput = {
+  trip_id: string
+  destination_id?: string | null
+  date: string
+  title: string
+  notes?: string
+}
+
+export type CreateItineraryItemInput = {
+  trip_id: string
+  itinerary_day_id: string
+  destination_id?: string | null
+  title: string
+  description?: string
+  category: ItineraryItemCategory
+  start_at: string
+  end_at?: string | null
+  timezone: string
+  status: ItineraryItem['status']
+  priority: ItineraryItem['priority']
+  address?: string
+  expected_cost?: number | null
+  currency?: CurrencyCode | null
+  notes?: string
+  created_by: string
+}
