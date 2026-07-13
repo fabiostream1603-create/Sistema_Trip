@@ -11,7 +11,9 @@ import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage'
 import { InstallPage } from '@/pages/InstallPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
+import { NewExpensePage } from '@/pages/trips/NewExpensePage'
 import { TripDayItineraryPage } from '@/pages/trips/TripDayItineraryPage'
+import { TripExpensesPage } from '@/pages/trips/TripExpensesPage'
 import { TripItineraryPage } from '@/pages/trips/TripItineraryPage'
 import { TripMapPage } from '@/pages/trips/TripMapPage'
 import { TripsPage } from '@/pages/trips/TripsPage'
@@ -109,21 +111,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ':tripId/expenses',
-        element: (
-          <PlaceholderPage
-            title="Expenses"
-            description="Track budgets, real spending, and split logic."
-          />
-        ),
+        element: <TripExpensesPage />,
       },
       {
         path: ':tripId/expenses/new',
-        element: (
-          <PlaceholderPage
-            title="New Expense"
-            description="Quick mobile-first expense entry is planned next."
-          />
-        ),
+        element: <NewExpensePage />,
       },
       {
         path: ':tripId/documents',

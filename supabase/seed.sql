@@ -190,4 +190,107 @@ begin
     on itinerary_day.trip_id = trip_id
    and itinerary_day.date = item_seed.trip_date
   on conflict do nothing;
+
+  insert into public.expense_categories (trip_id, name, icon, is_system, position)
+  values
+    (trip_id, 'Transport', 'plane', true, 1),
+    (trip_id, 'Food', 'utensils', true, 2),
+    (trip_id, 'Tickets', 'ticket', true, 3),
+    (trip_id, 'Stay', 'bed', true, 4),
+    (trip_id, 'Shopping', 'shopping-bag', true, 5)
+  on conflict do nothing;
+
+  insert into public.expenses (
+    trip_id,
+    title,
+    description,
+    category_id,
+    itinerary_item_id,
+    paid_by_traveler_id,
+    expense_date,
+    status,
+    payment_method,
+    original_amount,
+    original_currency,
+    exchange_rate,
+    base_amount,
+    base_currency,
+    city,
+    country,
+    notes,
+    created_by
+  )
+  select
+    trip_id,
+    expense_seed.title,
+    expense_seed.description,
+    category.id,
+    itinerary_item.id,
+    traveler.id,
+    expense_seed.expense_date,
+    expense_seed.status,
+    expense_seed.payment_method,
+    expense_seed.original_amount,
+    expense_seed.original_currency,
+    expense_seed.exchange_rate,
+    expense_seed.base_amount,
+    expense_seed.base_currency,
+    expense_seed.city,
+    expense_seed.country,
+    expense_seed.notes,
+    owner_user_id
+  from (
+    values
+      ('Colosseum tickets', 'Pair of tickets for the morning slot.', 'Tickets', 'Fabio', date '2026-09-20', 'paid', 'card', 36.00, 'EUR', 1.000000, 36.00, 'EUR', 'Rome', 'Italy', 'Paid in advance.', 'Colosseum entry'),
+      ('First dinner', 'Shared dinner after arrival.', 'Food', 'Mari', date '2026-09-19', 'paid', 'card', 60.00, 'EUR', 1.000000, 60.00, 'EUR', 'Rome', 'Italy', 'Includes drinks and dessert.', 'Dinner in Centro Storico'),
+      ('Acropolis tickets', 'Expected ticket budget for Athens.', 'Tickets', 'Fabio', date '2026-10-06', 'planned', 'card', 40.00, 'EUR', 1.000000, 40.00, 'EUR', 'Athens', 'Greece', 'Still to be purchased.', 'Acropolis morning'),
+      ('Airport transfer reserve', 'Expected transport reserve in BRL.', 'Transport', 'Fabio', date '2026-09-18', 'planned', 'pix', 320.00, 'BRL', 0.184500, 59.04, 'EUR', 'Sao Paulo', 'Brazil', 'Pre-departure airport transfer estimate.', null)
+  ) as expense_seed(
+    title,
+    description,
+    category_name,
+    paid_by_name,
+    expense_date,
+    status,
+    payment_method,
+    original_amount,
+    original_currency,
+    exchange_rate,
+    base_amount,
+    base_currency,
+    city,
+    country,
+    notes,
+    itinerary_title
+  )
+  join public.expense_categories category
+    on category.trip_id = trip_id
+   and category.name = expense_seed.category_name
+  join public.travelers traveler
+    on traveler.trip_id = trip_id
+   and traveler.name = expense_seed.paid_by_name
+  left join public.itinerary_items itinerary_item
+    on itinerary_item.trip_id = trip_id
+   and itinerary_item.title = expense_seed.itinerary_title
+  on conflict do nothing;
+
+  insert into public.expense_splits (
+    expense_id,
+    traveler_id,
+    split_type,
+    percentage,
+    amount,
+    settlement_status
+  )
+  select
+    expense.id,
+    traveler.id,
+    'equal',
+    50.00,
+    round((expense.base_amount / 2)::numeric, 2),
+    'pending'
+  from public.expenses expense
+  join public.travelers traveler on traveler.trip_id = expense.trip_id
+  where expense.trip_id = trip_id
+  on conflict (expense_id, traveler_id) do nothing;
 end $$;
